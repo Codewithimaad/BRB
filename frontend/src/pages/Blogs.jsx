@@ -37,7 +37,7 @@ export default function Blogs() {
     const loadBlogs = async () => {
       try {
         const base = import.meta.env.VITE_BACKEND_URL || window.location.origin;
-        const res = await axios.get(`${base}/api/blogs`);
+        const res = await axios.get(`${base}/api/blogs`, { withCredentials: true });
         if (res.data.success) {
           const fetched = res.data.blogs.map(b => {
             const raw = b.category;

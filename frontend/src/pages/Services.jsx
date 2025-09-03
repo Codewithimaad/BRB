@@ -60,7 +60,7 @@ export default function Services() {
     const loadServices = async () => {
       try {
         const base = import.meta.env.VITE_BACKEND_URL || window.location.origin;
-        const res = await axios.get(`${base}/api/services`);
+        const res = await axios.get(`${base}/api/services`, { withCredentials: true });
         if (res.data.success) {
           const fetched = res.data.services
             .filter(s => s.isActive)
