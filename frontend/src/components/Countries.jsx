@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import pakFlag from '../assets/Pak.png';
 import egyptFlag from '../assets/egypt.png';
 import qaFlag from '../assets/Qatar.png';
-import uaeFlag from '../assets/UAE.png';
 import kuwaitFlag from '../assets/kuwait.png';
 import saFlag from '../assets/sa.png'
 
@@ -42,13 +41,7 @@ export default function Countries() {
       tagline: "Rapidly expanding market with high potential",
       color: "from-green-500 to-emerald-600",
     },
-    {
-      name: "United Arab Emirates",
-      flag: uaeFlag,
-      description: "Financial Hub",
-      tagline: "Center of commerce and innovation in the region",
-      color: "from-green-500 to-emerald-600",
-    },
+  
     {
       name: "Kuwait",
       flag: kuwaitFlag,
