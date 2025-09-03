@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import pakFlag from '../assets/Pak.png';
 import egyptFlag from '../assets/egypt.png';
 import qaFlag from '../assets/Qatar.png';
-import uaeFlag from '../assets/Uae.png';
+import uaeFlag from '../assets/UAE.png';
 import kuwaitFlag from '../assets/kuwait.png';
 import saFlag from '../assets/sa.png'
 
