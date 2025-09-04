@@ -8,7 +8,6 @@ import cloudinary from "./config/cloudinary.js"; // ✅ Imported
 import serviceRoutes from "./routes/serviceRoutes.js";
 import countryRoutes from "./routes/countryRoutes.js";
 import cookieParser from "cookie-parser";
-import helmet from "helmet"; // ✅ Added
 
 // Load environment variables
 dotenv.config();
@@ -35,10 +34,6 @@ app.use(cors({
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }));
-
-
-// ✅ Helmet middleware for security headers (after CORS setup)
-app.use(helmet());
 
 
 app.use(cookieParser());
