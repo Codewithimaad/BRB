@@ -23,41 +23,23 @@ const allowedOrigins = [
     process.env.ADMIN_URL
 ];
 
-// Build allowed origins from env with sensible fallbacks (Vercel + localhost)
-const fallbackOrigins = [
-  "http://localhost:5173",
-  "http://127.0.0.1:5173",
-  "http://localhost:3000",
-  "https://business-portal-admin.vercel.app",
-  "https://business-portal-mauve.vercel.app/",
-  process.env.CLIENT_URL,
-  process.env.ADMIN_URL,
-].filter(Boolean);
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl, etc.)
-    if (!origin || allowedOrigins.includes(origin) || fallbackOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-};
+// ✅ CORS setup with multiple origins
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+}));
 
-// Ensure CORS runs early and preflight is handled
-app.use((req, res, next) => {
-  res.header("Vary", "Origin");
-  next();
-});
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
 
 // ✅ Helmet middleware for security headers (after CORS setup)
 app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 
 app.use(cookieParser());
