@@ -309,36 +309,7 @@ export default function ModernAbout() {
                 transition={{ delay: index * 0.1 }}
                 className="group"
               >
-                <motion.div
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  className="h-full bg-white rounded-3xl p-8 shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-500 relative overflow-hidden"
-                >
-                  {/* Background Gradient */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
-                  
-                  <div className="relative z-10">
-                    <div className={`w-16 h-16 bg-gradient-to-r ${feature.gradient} rounded-2xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                      {feature.icon}
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-4 group-hover:text-green-600 transition-colors duration-300">
-                      {feature.title}
-                    </h3>
-                    <p className="text-slate-600 leading-relaxed mb-6">
-                      {feature.description}
-                    </p>
-                    
-                    {/* Get Started Link in Feature Cards */}
-                    <a
-                      href="/contact"
-                      className="inline-flex items-center px-4 py-2 text-sm font-medium text-green-600 bg-green-50 rounded-lg group-hover:bg-green-600 group-hover:text-white transition-all duration-300 hover:shadow-md"
-                    >
-                      Get Started
-                      <svg className="ml-2 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </a>
-                  </div>
-                </motion.div>
+               
               </motion.div>
             ))}
           </div>

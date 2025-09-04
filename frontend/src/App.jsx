@@ -11,29 +11,31 @@ import Footer from "./components/Footer";
 import About from "./pages/About";
 
 function App() {
-  // Use the language change hook to force re-renders when language changes
   useLanguageChange();
 
   return (
     <Router>
       <Navbar />
-      
-                  <div className="relative min-h-screen w-full overflow-hidden">
-                    <div className='fixed inset-0 -z-10'>
-            <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"></div>
-          </div>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/countries" element={<Countries />} />
-        <Route path="/blogs" element={<Blogs />} />
-        <Route path="/blogs/:id" element={<BlogDetails />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/about" element={<About />} />
 
-      </Routes>
+      {/* Main wrapper with background */}
+      <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100">
+        {/* Gradient Blobs */}
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-green-400/20 to-emerald-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-teal-400/20 to-cyan-600/20 rounded-full blur-3xl"></div>
+
+        {/* Routes */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/countries" element={<Countries />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/blogs/:id" element={<BlogDetails />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
       </div>
-      <Footer/>
+
+      <Footer />
     </Router>
   );
 }

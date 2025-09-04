@@ -113,7 +113,7 @@ export default function Services() {
           <div className="mt-12 text-center">
             <a
               href="/services"
-              className="inline-flex items-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-2xl transition-all duration-500"
+              className="inline-flex items-center bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-700 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-2xl transition-all duration-500"
             >
               {t("view_more_services")}
               <svg className="ml-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -124,29 +124,7 @@ export default function Services() {
         </div>
       </motion.div>
 
-      {/* CTA Section */}
-      <motion.div
-        ref={ctaRef}
-        initial="hidden"
-        animate={ctaControls}
-        variants={textVariants}
-        className="relative py-24"
-      >
-        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-            {t("ready_transform")}
-          </h2>
-          <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
-            {t("ready_transform_desc")}
-          </p>
-          <a
-            href="/contact"
-            className="px-10 py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-xl font-bold shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
-          >
-            {t("schedule_consultation")}
-          </a>
-        </div>
-      </motion.div>
+     
     </div>
   );
 }

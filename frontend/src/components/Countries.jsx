@@ -2,17 +2,9 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 
-// Import all flag images
-import pakFlag from '../assets/Pak.png';
-import egyptFlag from '../assets/egypt.png';
-import qaFlag from '../assets/Qatar.png';
-import kuwaitFlag from '../assets/kuwait.png';
-import saFlag from '../assets/sa.png'
-
 export default function Countries() {
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
-  const [activeCountry, setActiveCountry] = useState(0);
   const [countries, setCountries] = useState([]);
 
   useEffect(() => {
@@ -21,92 +13,86 @@ export default function Countries() {
   }, []);
 
   useEffect(() => {
-    const load = async () => {
+    const fetchCountries = async () => {
       try {
-        const base = import.meta.env.VITE_BACKEND_URL;
-        const res = await axios.get(`${base}/api/countries`);
-        if (res.data.success) {
-          const fetched = res.data.countries
-            .filter(c => c.isActive)
+        const baseURL = import.meta.env.VITE_BACKEND_URL;
+        const response = await axios.get(`${baseURL}/api/countries`);
+
+        if (response.data.success) {
+          const fetchedCountries = response.data.countries
+            .filter((c) => c.isActive)
             .slice(0, 4)
-            .map(c => ({
+            .map((c) => ({
               name: c.name,
               nameAr: c.nameAr,
               code: c.titleShort,
               codeAr: c.titleShortAr,
               flag: c.flagUrl,
-              color: 'from-green-500 to-emerald-600',
-              tagline: ''
+              color: "from-green-400 to-green-800",
+              tagline: "",
             }));
-          setCountries(fetched);
+          setCountries(fetchedCountries);
         }
-      } catch (e) {
-        console.error('Failed to load countries', e);
+      } catch (error) {
+        console.error("Failed to load countries:", error);
       }
     };
-    load();
+
+    fetchCountries();
   }, []);
 
   return (
-    <div className="relative py-24 overflow-hidden">
+    <section className="relative py-24 bg-gray-50 overflow-hidden">
       <div className="relative z-10 max-w-7xl mx-auto px-6">
-        {/* Section Header */}
+        {/* Header */}
         <div
-          className={`text-center mb-20 transition-all duration-1000 ease-out transform ${
+          className={`text-center mb-16 transition-transform duration-1000 ease-out transform ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
           }`}
         >
-          <h2 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-green-400 to-green-800 bg-clip-text text-transparent mb-6 leading-tight">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-green-400 to-green-800 bg-clip-text text-transparent mb-4 leading-tight">
             {t("countries_title")}
           </h2>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-8 font-medium">
+          <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-medium">
             {t("countries_subtitle")}
           </p>
         </div>
 
         {/* Countries Grid */}
         <div
-          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-1000 ease-out ${
+          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 transition-transform duration-1000 ease-out ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-20 opacity-0"
           }`}
-          style={{ transitionDelay: "300ms" }}
         >
           {countries.map((country, index) => (
             <div
               key={index}
-              className={`group relative bg-white border border-slate-200/60 hover:border-slate-300/70 shadow-lg hover:shadow-xl p-8 rounded-3xl transition-all duration-500 hover:-translate-y-3 hover:scale-[1.02] cursor-pointer`}
-              onMouseEnter={() => setActiveCountry(index)}
+              className="group relative bg-white/70 backdrop-blur-md border border-slate-200/30 shadow-lg rounded-2xl p-6 md:p-8 flex flex-col items-center text-center cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:scale-[1.03] hover:shadow-2xl"
             >
               {/* Flag */}
-              <div className="text-center mb-6">
-                <img
-                  src={country.flag}
-                  alt={`${country.name} Flag`}
-                  className="mx-auto h-16 w-24 object-cover rounded-md shadow-sm"
-                />
-                <h3 className="text-2xl font-bold text-slate-800 mt-4 mb-2">
-                  {country.name}
-                </h3>
-                <span
-                  className={`inline-flex items-center px-4 py-2  text-slate-700 text-sm rounded-full border border-slate-200/50 backdrop-blur-sm font-medium`}
-                >
-                  {country.code}
-                </span>
-              </div>
+              <img
+                src={country.flag}
+                alt={`${country.name} Flag`}
+                className="h-16 w-24 object-cover rounded-md shadow-sm mb-4"
+              />
+
+              {/* Name & Code */}
+              <h3 className="text-2xl font-bold text-slate-800 mb-2">{country.name}</h3>
+              <span className="inline-flex items-center px-4 py-1 text-sm font-medium text-slate-700 rounded-full border border-slate-200/30 backdrop-blur-sm mb-4">
+                {country.code}
+              </span>
 
               {/* Tagline */}
-              <p className="text-slate-600 text-center text-sm leading-relaxed">
-                {country.tagline}
-              </p>
+              <p className="text-slate-600 text-sm leading-relaxed">{country.tagline}</p>
 
-              {/* Hover underline effect */}
+              {/* Hover Gradient Underline */}
               <div
-                className={`absolute inset-x-0 bottom-0 h-1.5 bg-gradient-to-r ${country.color} rounded-b-3xl opacity-0 group-hover:opacity-100 transition-all duration-500 transform scale-x-0 group-hover:scale-x-100`}
-              ></div>
+                className={`absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r ${country.color} rounded-b-2xl opacity-0 group-hover:opacity-100 transition-all duration-500 transform scale-x-0 group-hover:scale-x-100`}
+              />
             </div>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

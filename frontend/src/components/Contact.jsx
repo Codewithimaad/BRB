@@ -35,13 +35,13 @@ export default function Contact() {
   ];
 
   return (
-    <div className="relative py-20">
+    <section className="relative py-24 bg-gray-50">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
-        <div className={`text-center mb-16 transition-all duration-700 ease-out ${
+        <div className={`text-center mb-16 transition-transform duration-700 ease-out ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         }`}>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
             {t("contact_title")}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -49,51 +49,51 @@ export default function Contact() {
           </p>
         </div>
 
-        {/* Three Contact Cards */}
-        <div className={`grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 transition-all duration-700 ease-out ${
+        {/* Contact Cards */}
+        <div className={`grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 transition-transform duration-700 ease-out ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         }`} style={{ transitionDelay: '200ms' }}>
           {contactInfo.map((info, index) => (
             <div 
               key={index}
-              className="group text-center p-8 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer bg-white"
+              className="relative group bg-white p-8 rounded-2xl shadow-md hover:shadow-xl border border-gray-200 transition-transform duration-300 hover:-translate-y-2 hover:scale-[1.03] cursor-pointer overflow-hidden"
             >
-              {/* Background hover effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-green-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl -z-10"></div>
-              
+              {/* Hover Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-green-100 opacity-0 group-hover:opacity-40 transition-opacity duration-300 rounded-2xl -z-10"></div>
+
               {/* Icon */}
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
+              <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
                 {info.icon}
               </div>
-              
+
               {/* Title */}
-              <h3 className="text-xl font-semibold text-gray-800 group-hover:text-green-800 transition-colors duration-300 mb-2">
+              <h3 className="text-xl font-semibold text-gray-800 group-hover:text-green-700 transition-colors duration-300 mb-2">
                 {info.title}
               </h3>
-              
+
               {/* Value */}
               <a 
                 href={info.link}
-                className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300 block mb-3 font-medium"
+                className="block text-gray-600 group-hover:text-gray-900 font-medium mb-3 transition-colors duration-300"
               >
                 {info.value}
               </a>
-              
+
               {/* Description */}
-              <p className="text-sm text-gray-500 group-hover:text-gray-600 transition-colors duration-300">
+              <p className="text-sm text-gray-500 group-hover:text-gray-700 transition-colors duration-300">
                 {info.description}
               </p>
             </div>
           ))}
         </div>
 
-        {/* Contact Us Button */}
-        <div className={`text-center transition-all duration-700 ease-out ${
+        {/* Contact Button */}
+        <div className={`text-center transition-transform duration-700 ease-out ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         }`} style={{ transitionDelay: '400ms' }}>
           <a
             href="/contact"
-            className="inline-flex items-center px-8 py-4 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors duration-300 font-semibold text-lg shadow-md hover:shadow-lg hover:-translate-y-1"
+            className="inline-flex items-center px-10 py-4 bg-green-600 text-white rounded-2xl font-semibold text-lg shadow-lg hover:bg-green-700 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
           >
             {t("contact_us")}
             <svg className="ml-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,6 +102,6 @@ export default function Contact() {
           </a>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

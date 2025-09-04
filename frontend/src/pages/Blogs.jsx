@@ -84,39 +84,8 @@ export default function Blogs() {
   const isArabic = i18n.language === 'ar';
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-white">
-      
-      {/* Subtle Background Elements */}
-      <div className="fixed inset-0 pointer-events-none">
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(to right, #0f766e 1px, transparent 1px),
-                              linear-gradient(to bottom, #0f766e 1px, transparent 1px)`,
-            backgroundSize: '50px 50px',
-          }}
-        />
-        
-        {/* Subtle gradient orbs */}
-        <div 
-          className="absolute w-80 h-80 rounded-full opacity-[0.03]"
-          style={{
-            background: 'linear-gradient(135deg, #0d9488 0%, #059669 100%)',
-            transform: `translate(${mousePosition.x * 0.01}px, ${mousePosition.y * 0.01 - scrollY * 0.05}px)`,
-            left: '10%',
-            top: '20%',
-          }}
-        />
-        <div 
-          className="absolute w-64 h-64 rounded-full opacity-[0.02]"
-          style={{
-            background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
-            transform: `translate(${mousePosition.x * -0.008}px, ${mousePosition.y * -0.008 - scrollY * 0.03}px)`,
-            right: '15%',
-            top: '30%',
-          }}
-        />
-      </div>
+    <div className="min-h-screen relative overflow-hidden">
+    
 
       {/* Hero Section */}
       <div className="relative pt-32 pb-16 z-10">
