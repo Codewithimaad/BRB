@@ -18,7 +18,9 @@ const Countries = () => {
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
+    nameAr: '',
     titleShort: '',
+    titleShortAr: '',
     isActive: true,
     flag: null,
   });
@@ -42,7 +44,7 @@ const Countries = () => {
 
   const openCreate = () => {
     setEditingId(null);
-    setFormData({ name: '', titleShort: '', isActive: true, flag: null });
+    setFormData({ name: '', nameAr: '', titleShort: '', titleShortAr: '', isActive: true, flag: null });
     setFormOpen(true);
   };
 
@@ -50,7 +52,9 @@ const Countries = () => {
     setEditingId(country._id);
     setFormData({
       name: country.name || '',
+      nameAr: country.nameAr || '',
       titleShort: country.titleShort || '',
+      titleShortAr: country.titleShortAr || '',
       isActive: country.isActive,
       flag: null,
     });
@@ -84,7 +88,9 @@ const Countries = () => {
     try {
       const data = new FormData();
       data.append('name', formData.name);
+      data.append('nameAr', formData.nameAr);
       data.append('titleShort', formData.titleShort);
+      data.append('titleShortAr', formData.titleShortAr);
       data.append('isActive', formData.isActive);
       if (formData.flag) data.append('flag', formData.flag);
 
@@ -200,11 +206,25 @@ const Countries = () => {
                 />
                 <input
                   type="text"
+                  value={formData.nameAr}
+                  onChange={(e) => setFormData({ ...formData, nameAr: e.target.value })}
+                  placeholder="اسم الدولة (Arabic)"
+                  className="w-full px-4 py-3 border rounded-xl"
+                />
+                <input
+                  type="text"
                   value={formData.titleShort}
                   onChange={(e) => setFormData({ ...formData, titleShort: e.target.value })}
                   placeholder="Short Title"
                   className="w-full px-4 py-3 border rounded-xl"
                   required
+                />
+                <input
+                  type="text"
+                  value={formData.titleShortAr}
+                  onChange={(e) => setFormData({ ...formData, titleShortAr: e.target.value })}
+                  placeholder="عنوان قصير (Arabic)"
+                  className="w-full px-4 py-3 border rounded-xl"
                 />
                 <div className="flex items-center gap-4">
                   <label className="flex items-center space-x-2">

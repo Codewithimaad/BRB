@@ -1,11 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView, useAnimation } from "framer-motion";
-
-import companyEstablishmentImg from '../assets/company_establishment.png'
-import enternalCompanyIquisition from '../assets/external_company.png'
-import taxesImg from '../assets/taxes.png'
-import humanResourcesImg from '../assets/human_resources.png'
+import axios from "axios";
 
 // Animation variants
 const textVariants = {
@@ -19,7 +15,7 @@ const cardVariants = {
 };
 
 export default function Services() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
 
   const heroRef = useRef(null);
@@ -45,13 +41,30 @@ export default function Services() {
     return () => clearTimeout(timer);
   }, []);
 
-  const services = [
-    { title: t("company_establishment"), description: t("company_establishment_desc"), image: companyEstablishmentImg },
-    { title: t("external_company_acquisition"), description: t("external_company_acquisition_desc"), image: enternalCompanyIquisition },
-    { title: t("taxes_and_budgets"), description: t("taxes_and_budgets_desc"), image: taxesImg },
-    { title: t("human_resources"), description: t("human_resources_desc"), image: humanResourcesImg },
-    // Additional services can be added here
-  ];
+  const [services, setServices] = useState([]);
+
+  useEffect(() => {
+    const loadServices = async () => {
+      try {
+        const base = import.meta.env.VITE_BACKEND_URL;
+        const res = await axios.get(`${base}/api/services`);
+        if (res.data.success) {
+          const fetched = res.data.services
+            .filter(s => s.isActive)
+            .map(s => ({
+              id: s._id,
+              title: s.title,
+              titleAr: s.titleAr,
+              image: s.imageUrl,
+            }));
+          setServices(fetched.slice(0, 4));
+        }
+      } catch (e) {
+        console.error('Failed to load services', e);
+      }
+    };
+    loadServices();
+  }, []);
 
   return (
     <div className="min-h-screen font-inter relative overflow-hidden">
@@ -68,7 +81,7 @@ export default function Services() {
       >
         <div className="max-w-4xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-            {services.slice(0, 4).map((service, index) => (
+            {services.map((service, index) => (
               <motion.div
                 key={index}
                 initial="hidden"
@@ -81,7 +94,7 @@ export default function Services() {
                   <div className="w-full h-full overflow-hidden rounded-2xl">
                     <img
                       src={service.image}
-                      alt={service.title}
+                      alt={i18n.language === 'ar' && service.titleAr ? service.titleAr : service.title}
                       className="object-contain w-full h-full transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>
@@ -89,7 +102,7 @@ export default function Services() {
 
                 <div className="px-4 pb-5 text-center bg-gray-50">
                   <h3 className="text-lg font-bold" style={{ color: "#60a685" }}>
-                    {service.title}
+                    {i18n.language === 'ar' && service.titleAr ? service.titleAr : service.title}
                   </h3>
                 </div>
               </motion.div>

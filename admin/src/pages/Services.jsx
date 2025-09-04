@@ -18,8 +18,11 @@ const Services = () => {
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
+    titleAr: '',
     description: '',
+    descriptionAr: '',
     tags: '',
+    tagsAr: '',
     isActive: true,
     featured: false,
     image: null,
@@ -44,7 +47,7 @@ const Services = () => {
 
   const openCreate = () => {
     setEditingId(null);
-    setFormData({ title: '', description: '', tags: '', isActive: true, featured: false, image: null });
+    setFormData({ title: '', titleAr: '', description: '', descriptionAr: '', tags: '', tagsAr: '', isActive: true, featured: false, image: null });
     setFormOpen(true);
   };
 
@@ -52,8 +55,11 @@ const Services = () => {
     setEditingId(service._id);
     setFormData({
       title: service.title || '',
+      titleAr: service.titleAr || '',
       description: service.description || '',
+      descriptionAr: service.descriptionAr || '',
       tags: (service.tags || []).join(', '),
+      tagsAr: (service.tagsAr || []).join(', '),
       isActive: service.isActive,
       featured: service.featured,
       image: null,
@@ -110,8 +116,11 @@ const Services = () => {
     try {
       const data = new FormData();
       data.append('title', formData.title);
+      data.append('titleAr', formData.titleAr);
       data.append('description', formData.description);
+      data.append('descriptionAr', formData.descriptionAr);
       data.append('tags', formData.tags.split(',').map(t => t.trim()).filter(Boolean));
+      data.append('tagsAr', formData.tagsAr.split(',').map(t => t.trim()).filter(Boolean));
       data.append('isActive', formData.isActive);
       data.append('featured', formData.featured);
       if (formData.image) data.append('image', formData.image);
@@ -319,8 +328,19 @@ const Services = () => {
                         required
                       />
                     </div>
-                    
                     <div className="space-y-2">
+                      <label className="block text-sm font-medium text-slate-700">العنوان (Arabic)</label>
+                      <input
+                        type="text"
+                        value={formData.titleAr}
+                        onChange={(e) => setFormData({ ...formData, titleAr: e.target.value })}
+                        placeholder="عنوان الخدمة"
+                        className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all duration-200"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
                       <label className="block text-sm font-medium text-slate-700">Tags</label>
                       <input
                         type="text"
@@ -330,6 +350,15 @@ const Services = () => {
                         className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all duration-200"
                       />
                     </div>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-slate-700">الوسوم (Arabic)</label>
+                    <input
+                      type="text"
+                      value={formData.tagsAr}
+                      onChange={(e) => setFormData({ ...formData, tagsAr: e.target.value })}
+                      placeholder="وسوم مفصولة بفاصلة"
+                      className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all duration-200"
+                    />
                   </div>
                   
                   <div className="space-y-2">
@@ -341,6 +370,16 @@ const Services = () => {
                       rows={6}
                       className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all duration-200"
                       required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-slate-700">الوصف (Arabic)</label>
+                    <textarea
+                      value={formData.descriptionAr}
+                      onChange={(e) => setFormData({ ...formData, descriptionAr: e.target.value })}
+                      placeholder="وصف الخدمة"
+                      rows={6}
+                      className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500 transition-all duration-200"
                     />
                   </div>
                   

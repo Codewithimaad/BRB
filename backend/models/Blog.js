@@ -7,11 +7,25 @@ const blogSchema = new mongoose.Schema(
             required: true,
             trim: true,
         },
+        // Arabic title (optional)
+        titleAr: {
+            type: String,
+            trim: true,
+        },
         content: {
             type: String,
             required: true,
         },
+        // Arabic content (optional)
+        contentAr: {
+            type: String,
+        },
         excerpt: {
+            type: String,
+            trim: true,
+        },
+        // Arabic excerpt (optional)
+        excerptAr: {
             type: String,
             trim: true,
         },
@@ -23,6 +37,11 @@ const blogSchema = new mongoose.Schema(
             type: String,
             trim: true,
             required: true,
+        }],
+        // Arabic categories array (optional)
+        categoryAr: [{
+            type: String,
+            trim: true,
         }],
         isPublished: {
             type: Boolean,

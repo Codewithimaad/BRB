@@ -300,7 +300,7 @@ export default function Contact() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`relative overflow-hidden bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-xl font-semibold shadow-md transition-all duration-300 w-full flex items-center justify-center ${
+                    className={`relative overflow-hidden bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-4 rounded-xl font-semibold shadow-md transition-all duration-300 w-full flex items-center justify-center ${
                       isSubmitting ? 'opacity-80 cursor-not-allowed' : 'hover:shadow-lg hover:-translate-y-0.5'
                     }`}
                   >
@@ -390,7 +390,7 @@ export default function Contact() {
               <div className="text-center">
                 <div className="text-4xl mb-4">🗺️</div>
                 <p className="text-gray-600 font-medium">{t("interactive_map")}</p>
-                <button className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                <button className="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
                   Open in Google Maps
                 </button>
               </div>

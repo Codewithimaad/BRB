@@ -1,10 +1,18 @@
 import { useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AuthContext } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 
 const Header = ({ setIsOpen }) => {
   const { handleLogout, admin } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { i18n } = useTranslation();
+  const toggleLang = () => {
+    const next = i18n.language === 'ar' ? 'en' : 'ar';
+    i18n.changeLanguage(next);
+    document.documentElement.dir = next === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = next;
+  };
 
   // Get user initials for avatar
   const getUserInitials = (name) => {
@@ -42,7 +50,7 @@ const Header = ({ setIsOpen }) => {
           {/* Page title or breadcrumb */}
           <div className="hidden md:block">
             <h2 className="text-lg font-semibold bg-gradient-to-r from-emerald-800 to-emerald-600 bg-clip-text text-transparent">
-              Dashboard
+              {i18n.language === 'ar' ? 'لوحة التحكم' : 'Dashboard'}
             </h2>
           </div>
         </div>
@@ -81,7 +89,10 @@ const Header = ({ setIsOpen }) => {
             <svg className="w-4 h-4 group-hover:rotate-12 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
-            <span className="hidden sm:inline">Logout</span>
+            <span className="hidden sm:inline">{i18n.language === 'ar' ? 'تسجيل الخروج' : 'Logout'}</span>
+          </button>
+          <button onClick={toggleLang} className="px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm font-semibold">
+            {i18n.language === 'ar' ? 'English' : 'العربية'}
           </button>
         </div>
       </div>

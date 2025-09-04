@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 
 export default function Blogs() {
   const { t } = useTranslation();
@@ -10,74 +11,38 @@ export default function Blogs() {
     return () => clearTimeout(timer);
   }, []);
 
-  const blogs = [
-    {
-      title: "The Future of Digital Marketing in 2024",
-      excerpt: "Discover the latest trends and technologies that will shape digital marketing strategies in the coming year.",
-      author: "Sarah Johnson",
-      date: "Dec 15, 2024",
-      readTime: "5 min read",
-      category: "Marketing",
-      image: "📱",
-      color: "from-green-800 to-green-400",
-      shadowColor: "shadow-blue-500/20"
-    },
-    {
-      title: "Building Scalable Web Applications",
-      excerpt: "Learn the best practices for creating web applications that can handle millions of users and scale efficiently.",
-      author: "Michael Chen",
-      date: "Dec 12, 2024",
-      readTime: "8 min read",
-      category: "Development",
-      image: "💻",
-      color: "from-green-800 to-green-400",
-      shadowColor: "shadow-purple-500/20"
-    },
-    {
-      title: "AI-Powered Business Intelligence",
-      excerpt: "How artificial intelligence is revolutionizing business analytics and decision-making processes.",
-      author: "Emily Rodriguez",
-      date: "Dec 10, 2024",
-      readTime: "6 min read",
-      category: "AI & Analytics",
-      image: "🤖",
-      color: "from-green-800 to-green-400",
-      shadowColor: "shadow-emerald-500/20"
-    },
-    {
-      title: "Customer Experience Optimization",
-      excerpt: "Strategies to enhance customer satisfaction and loyalty through improved user experience design.",
-      author: "David Thompson",
-      date: "Dec 8, 2024",
-      readTime: "7 min read",
-      category: "UX Design",
-      image: "🎯",
-      color: "from-green-800 to-green-400",
-      shadowColor: "shadow-orange-500/20"
-    },
-    {
-      title: "Cloud Infrastructure Best Practices",
-      excerpt: "Essential strategies for building robust and scalable cloud infrastructure solutions.",
-      author: "Lisa Wang",
-      date: "Dec 5, 2024",
-      readTime: "9 min read",
-      category: "Cloud",
-      image: "☁️",
-      color: "from-green-800 to-green-400",
-      shadowColor: "shadow-indigo-500/20"
-    },
-    {
-      title: "Mobile App Development Trends",
-      excerpt: "Exploring the latest innovations and approaches in mobile application development.",
-      author: "Alex Martinez",
-      date: "Dec 3, 2024",
-      readTime: "6 min read",
-      category: "Mobile",
-      image: "📱",
-      color: "from-green-700 to-green-400",
-      shadowColor: "shadow-pink-500/20"
-    }
-  ];
+  const [blogs, setBlogs] = useState([]);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const base = import.meta.env.VITE_BACKEND_URL;
+        const res = await axios.get(`${base}/api/blogs`);
+        if (res.data.success) {
+          const fetched = res.data.blogs
+            .filter(b => b.isPublished)
+            .slice(0, 4)
+            .map(b => ({
+              id: b._id,
+              title: b.title,
+              titleAr: b.titleAr,
+              excerpt: b.excerpt,
+              excerptAr: b.excerptAr,
+              category: Array.isArray(b.category) ? b.category[0] : b.category,
+              date: new Date(b.publishedAt || b.createdAt).toLocaleDateString(),
+              image: '📝',
+              color: 'from-green-800 to-green-400',
+              shadowColor: 'shadow-emerald-500/20',
+              author: 'Administrator'
+            }));
+          setBlogs(fetched);
+        }
+      } catch (e) {
+        console.error('Failed to load blogs', e);
+      }
+    };
+    load();
+  }, []);
 
   return (
     <div className="relative py-24 overflow-hidden">

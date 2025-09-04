@@ -2,7 +2,7 @@ import Country from "../models/Country.js";
 
 export const createCountry = async (req, res) => {
     try {
-        const { name, titleShort, isActive } = req.body;
+        const { name, nameAr, titleShort, titleShortAr, isActive } = req.body;
         const flagUrl = req.file?.path || req.body.flagUrl;
         if (!name || !titleShort) {
             return res.status(400).json({ success: false, message: "name and titleShort are required" });
@@ -14,7 +14,7 @@ export const createCountry = async (req, res) => {
         if (exists) {
             return res.status(409).json({ success: false, message: "Country already exists" });
         }
-        const country = await Country.create({ name, titleShort, isActive, flagUrl });
+        const country = await Country.create({ name, nameAr, titleShort, titleShortAr, isActive, flagUrl });
         res.status(201).json({ success: true, country });
     } catch (error) {
         console.error("Create country error:", error);
@@ -53,8 +53,8 @@ export const getCountryById = async (req, res) => {
 
 export const updateCountry = async (req, res) => {
     try {
-        const { name, titleShort, isActive } = req.body;
-        const updates = { name, titleShort, isActive };
+        const { name, nameAr, titleShort, titleShortAr, isActive } = req.body;
+        const updates = { name, nameAr, titleShort, titleShortAr, isActive };
         if (req.file?.path) updates.flagUrl = req.file.path;
         const country = await Country.findByIdAndUpdate(req.params.id, updates, { new: true });
         if (!country) return res.status(404).json({ success: false, message: "Country not found" });

@@ -56,10 +56,10 @@ export default function Contact() {
           {contactInfo.map((info, index) => (
             <div 
               key={index}
-              className="group text-center p-8 rounded-xl border border-gray-200 hover:border-blue-300 transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer bg-white"
+              className="group text-center p-8 rounded-xl border border-gray-200 hover:border-green-300 transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer bg-white"
             >
               {/* Background hover effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl -z-10"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-green-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl -z-10"></div>
               
               {/* Icon */}
               <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -67,7 +67,7 @@ export default function Contact() {
               </div>
               
               {/* Title */}
-              <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-800 transition-colors duration-300 mb-2">
+              <h3 className="text-xl font-semibold text-gray-800 group-hover:text-green-800 transition-colors duration-300 mb-2">
                 {info.title}
               </h3>
               
@@ -93,7 +93,7 @@ export default function Contact() {
         }`} style={{ transitionDelay: '400ms' }}>
           <a
             href="/contact"
-            className="inline-flex items-center px-8 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors duration-300 font-semibold text-lg shadow-md hover:shadow-lg hover:-translate-y-1"
+            className="inline-flex items-center px-8 py-4 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors duration-300 font-semibold text-lg shadow-md hover:shadow-lg hover:-translate-y-1"
           >
             {t("contact_us")}
             <svg className="ml-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

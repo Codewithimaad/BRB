@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function BlogDetails() {
+  const { t, i18n } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [blog, setBlog] = useState(null);
@@ -101,7 +103,7 @@ export default function BlogDetails() {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Back to Blogs
+            {isArabic ? t('view_all_blogs') : 'Back to Blogs'}
           </button>
         </div>
       </div>
@@ -116,6 +118,8 @@ export default function BlogDetails() {
     : typeof blog.category === 'string' && blog.category
     ? [blog.category]
     : [];
+
+  const isArabic = i18n.language === 'ar';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -149,7 +153,7 @@ export default function BlogDetails() {
 
           {/* Title */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-            {blog.title}
+            {isArabic && blog.titleAr ? blog.titleAr : blog.title}
           </h1>
 
           {/* Meta Information */}
@@ -160,7 +164,7 @@ export default function BlogDetails() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
-              <span className="font-medium">Administrator</span>
+              <span className="font-medium">{isArabic ? t('administrator') : 'Administrator'}</span>
             </div>
             
             <div className="flex items-center gap-2">
@@ -168,7 +172,7 @@ export default function BlogDetails() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               <span>
-                {new Date(blog.publishedAt || blog.createdAt || Date.now()).toLocaleDateString('en-US', {
+                {new Date(blog.publishedAt || blog.createdAt || Date.now()).toLocaleDateString(isArabic ? 'ar-EG' : 'en-US', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric'
@@ -208,10 +212,10 @@ export default function BlogDetails() {
           {/* Article Content */}
           <article className="p-8 md:p-12">
             {/* Excerpt */}
-            {blog.excerpt && (
+            {(isArabic ? blog.excerptAr : blog.excerpt) && (
               <div className="mb-12 p-8 bg-gradient-to-r from-green-50 to-teal-50 rounded-xl border-l-4 border-green-500">
                 <p className="text-xl text-gray-700 leading-relaxed font-light italic">
-                  "{blog.excerpt}"
+                  "{isArabic && blog.excerptAr ? blog.excerptAr : blog.excerpt}"
                 </p>
               </div>
             )}
@@ -225,7 +229,7 @@ export default function BlogDetails() {
                   fontSize: '1.125rem'
                 }}
               >
-                {blog.content}
+                {isArabic && blog.contentAr ? blog.contentAr : blog.content}
               </div>
             </div>
 

@@ -16,7 +16,7 @@ const cardVariants = {
 };
 
 export default function Countries() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [countries, setCountries] = useState([]);
 
   // Refs & animations
@@ -44,7 +44,7 @@ const res = await axios.get(`${base}/api/countries`);
         if (res.data.success) {
           const fetched = res.data.countries
             .filter(c => c.isActive)
-            .map(c => ({ name: c.name, code: c.titleShort, flag: '', image: c.flagUrl }));
+            .map(c => ({ name: c.name, nameAr: c.nameAr, code: c.titleShort, codeAr: c.titleShortAr, flag: '', image: c.flagUrl }));
           setCountries(fetched);
         }
       } catch (e) {
@@ -108,10 +108,10 @@ const res = await axios.get(`${base}/api/countries`);
                 <div className="p-6 flex flex-col items-center text-center">
                   <div className="text-5xl mb-4">{country.flag}</div>
                   <h3 className="text-xl font-bold text-slate-800 mb-2">
-                    {country.name}
+                    {i18n.language === 'ar' && country.nameAr ? country.nameAr : country.name}
                   </h3>
                   <p className="text-slate-500 text-sm font-medium mb-4">
-                    {country.code}
+                    {i18n.language === 'ar' && country.codeAr ? country.codeAr : country.code}
                   </p>
                   
                   <div className="w-16 h-1 bg-gradient-to-r from-green-400 to-green-400 rounded-full mb-4 opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>

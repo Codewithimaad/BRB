@@ -7,14 +7,28 @@ const serviceSchema = new mongoose.Schema(
             required: true,
             trim: true,
         },
+        // Arabic title (optional)
+        titleAr: {
+            type: String,
+            trim: true,
+        },
         description: {
             type: String,
             required: true,
+        },
+        // Arabic description (optional)
+        descriptionAr: {
+            type: String,
         },
         imageUrl: {
             type: String,
         },
         tags: [{
+            type: String,
+            trim: true,
+        }],
+        // Arabic tags (optional)
+        tagsAr: [{
             type: String,
             trim: true,
         }],

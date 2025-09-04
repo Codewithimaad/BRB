@@ -37,7 +37,7 @@ export default function Footer() {
           {/* Company Info */}
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-700 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-600 to-green-800 rounded-xl flex items-center justify-center">
                 <span className="text-white text-xl font-bold">S</span>
               </div>
               <span className="text-2xl font-bold text-white">SATMB</span>
@@ -50,7 +50,7 @@ export default function Footer() {
                 <a
                   key={social.name}
                   href={social.href}
-                  className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors duration-300"
+                  className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-green-600 transition-colors duration-300"
                 >
                   <i className={social.icon}></i>
                 </a>
@@ -104,7 +104,7 @@ export default function Footer() {
                 placeholder={t('enter_email_newsletter')}
                 className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
               />
-              <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
+              <button className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300">
                 {t('subscribe')}
               </button>
             </div>

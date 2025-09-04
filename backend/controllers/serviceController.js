@@ -2,12 +2,12 @@ import Service from "../models/Service.js";
 
 export const createService = async (req, res) => {
     try {
-        const { title, description, tags, isActive, featured } = req.body;
+        const { title, titleAr, description, descriptionAr, tags, tagsAr, isActive, featured } = req.body;
         const imageUrl = req.file?.path || req.body.imageUrl;
         if (!title || !description) {
             return res.status(400).json({ success: false, message: "Title and description are required" });
         }
-        const service = await Service.create({ title, description, tags, isActive, featured, imageUrl });
+        const service = await Service.create({ title, titleAr, description, descriptionAr, tags, tagsAr, isActive, featured, imageUrl });
         res.status(201).json({ success: true, service });
     } catch (error) {
         console.error("Create service error:", error);
@@ -47,8 +47,8 @@ export const getServiceById = async (req, res) => {
 
 export const updateService = async (req, res) => {
     try {
-        const { title, description, tags, isActive, featured } = req.body;
-        const updates = { title, description, tags, isActive, featured };
+        const { title, titleAr, description, descriptionAr, tags, tagsAr, isActive, featured } = req.body;
+        const updates = { title, titleAr, description, descriptionAr, tags, tagsAr, isActive, featured };
         if (req.file?.path) updates.imageUrl = req.file.path;
         const service = await Service.findByIdAndUpdate(req.params.id, updates, { new: true });
         if (!service) return res.status(404).json({ success: false, message: "Service not found" });

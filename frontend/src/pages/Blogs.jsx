@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 export default function Blogs() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
@@ -50,7 +50,9 @@ export default function Blogs() {
             return {
               id: b._id,
               title: b.title,
+              titleAr: b.titleAr,
               excerpt: b.excerpt || (b.content || '').slice(0, 140),
+              excerptAr: b.excerptAr,
               author: 'Administrator',
               date: new Date(b.publishedAt || b.createdAt).toLocaleDateString(),
               readTime: '',
@@ -58,6 +60,7 @@ export default function Blogs() {
               categories: categoriesArray,
               imageUrl: b.imageUrl,
               content: b.content,
+              contentAr: b.contentAr,
               isPublished: b.isPublished,
             };
           });
@@ -77,6 +80,8 @@ export default function Blogs() {
   const filteredBlogs = activeCategory === t("all") 
     ? blogs 
     : blogs.filter(blog => blog.category === activeCategory);
+
+  const isArabic = i18n.language === 'ar';
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-white">
@@ -150,8 +155,8 @@ export default function Blogs() {
                 onClick={() => setActiveCategory(category)}
                 className={`px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-300 ${
                   activeCategory === category
-                    ? 'bg-emerald-600 text-white shadow-sm' 
-                    : 'text-gray-600 hover:text-emerald-700 bg-white hover:bg-emerald-50 border border-gray-200'
+                    ? 'bg-green-600 text-white shadow-sm' 
+                    : 'text-gray-600 hover:text-green-700 bg-white hover:bg-green-50 border border-gray-200'
                 }`}
               >
                 {category}
@@ -193,11 +198,11 @@ export default function Blogs() {
                   </div>
 
                   <h3 className="text-lg font-semibold text-gray-900 mb-3 leading-tight line-clamp-2 group-hover:text-emerald-700 transition-colors">
-                    {blog.title}
+                    {isArabic && blog.titleAr ? blog.titleAr : blog.title}
                   </h3>
 
                   <p className="text-gray-600 text-sm leading-relaxed mb-5 line-clamp-3">
-                    {blog.excerpt}
+                    {isArabic && blog.excerptAr ? blog.excerptAr : blog.excerpt}
                   </p>
 
                   <div className="flex items-center justify-between pt-4 border-t border-gray-100">
@@ -258,7 +263,7 @@ export default function Blogs() {
                 placeholder={t("enter_email_newsletter")}
                 className="flex-1 px-4 py-3 bg-white text-gray-700 placeholder-gray-500 text-sm rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
-              <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg text-sm font-medium transition-colors duration-300 shadow-sm">
+              <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg text-sm font-medium transition-colors duration-300 shadow-sm">
                 {t("subscribe")}
               </button>
             </div>

@@ -106,7 +106,7 @@ const Navbar = () => {
               {/* CTA Button */}
               <Link
                 to="/contact"
-                className="hidden md:inline-flex items-center px-5 py-2.5 rounded-xl font-medium bg-gradient-to-r from-emerald-600 to-green-600 text-white hover:from-emerald-700 hover:to-green-700 transition-all duration-300 shadow-sm hover:shadow-md"
+                className="hidden md:inline-flex items-center px-5 py-2.5 rounded-xl font-medium bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-sm hover:shadow-md"
               >
                 {t("get_started")}
               </Link>
@@ -187,7 +187,7 @@ const Navbar = () => {
                   setIsOpen(false);
                   setActiveItem("/contact");
                 }}
-                className="w-full inline-flex items-center justify-center px-5 py-3 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-xl font-medium hover:from-emerald-700 hover:to-green-700 transition-all duration-300 shadow-sm hover:shadow-md"
+                className="w-full inline-flex items-center justify-center px-5 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl font-medium hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-sm hover:shadow-md"
               >
                 {t("get_started")}
               </Link>

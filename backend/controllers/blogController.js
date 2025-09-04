@@ -27,8 +27,9 @@ const normalizeCategory = (raw) => {
 
 export const createBlog = async (req, res) => {
     try {
-        const { title, content, excerpt, isPublished } = req.body;
+        const { title, titleAr, content, contentAr, excerpt, excerptAr, isPublished } = req.body;
         const category = normalizeCategory(req.body.category);
+        const categoryAr = normalizeCategory(req.body.categoryAr);
         const imageUrl = req.file?.path || req.body.imageUrl;
 
         if (!title || !content) {
@@ -37,10 +38,14 @@ export const createBlog = async (req, res) => {
 
         const blog = await Blog.create({
             title,
+            titleAr,
             content,
+            contentAr,
             excerpt,
+            excerptAr,
             imageUrl,
             category,
+            categoryAr,
             isPublished,
             publishedAt: isPublished ? Date.now() : undefined,
         });
@@ -84,10 +89,12 @@ export const getBlogById = async (req, res) => {
 
 export const updateBlog = async (req, res) => {
     try {
-        const { title, content, excerpt, isPublished } = req.body;
-        const updates = { title, content, excerpt, isPublished };
+        const { title, titleAr, content, contentAr, excerpt, excerptAr, isPublished } = req.body;
+        const updates = { title, titleAr, content, contentAr, excerpt, excerptAr, isPublished };
         const category = normalizeCategory(req.body.category);
+        const categoryAr = normalizeCategory(req.body.categoryAr);
         if (category.length > 0) updates.category = category;
+        if (categoryAr.length > 0) updates.categoryAr = categoryAr;
         if (req.file?.path) updates.imageUrl = req.file.path;
         if (typeof isPublished !== "undefined") {
             updates.publishedAt = isPublished ? Date.now() : null;

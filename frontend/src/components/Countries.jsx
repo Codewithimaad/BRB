@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 
 // Import all flag images
 import pakFlag from '../assets/Pak.png';
@@ -12,51 +13,39 @@ export default function Countries() {
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [activeCountry, setActiveCountry] = useState(0);
+  const [countries, setCountries] = useState([]);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
-  const countries = [
-    {
-      name: "Saudi Arabia",
-      flag: saFlag,
-      description: "Main Market",
-      tagline: "The heart of our operations in the Middle East",
-      color: "from-green-500 to-emerald-600",
-    },
-    {
-      name: "Egypt",
-      flag: egyptFlag,
-      description: "Gateway to Africa",
-      tagline: "Strategic access to emerging African markets",
-      color: "from-green-500 to-emerald-600",
-
-    },
-    {
-      name: "Qatar",
-      flag: qaFlag,
-      description: "Growing Economy",
-      tagline: "Rapidly expanding market with high potential",
-      color: "from-green-500 to-emerald-600",
-    },
-  
-    {
-      name: "Kuwait",
-      flag: kuwaitFlag,
-      description: "Energy Leader",
-      tagline: "Strong economic foundation with oil reserves",
-      color: "from-green-500 to-emerald-600",
-    },
-    {
-      name: "Pakistan",
-      flag: pakFlag,
-      description: "Emerging Market",
-      tagline: "Diversifying economy with investment opportunities",
-      color: "from-green-500 to-emerald-600",
-    },
-  ];
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const base = import.meta.env.VITE_BACKEND_URL;
+        const res = await axios.get(`${base}/api/countries`);
+        if (res.data.success) {
+          const fetched = res.data.countries
+            .filter(c => c.isActive)
+            .slice(0, 4)
+            .map(c => ({
+              name: c.name,
+              nameAr: c.nameAr,
+              code: c.titleShort,
+              codeAr: c.titleShortAr,
+              flag: c.flagUrl,
+              color: 'from-green-500 to-emerald-600',
+              tagline: ''
+            }));
+          setCountries(fetched);
+        }
+      } catch (e) {
+        console.error('Failed to load countries', e);
+      }
+    };
+    load();
+  }, []);
 
   return (
     <div className="relative py-24 overflow-hidden">
@@ -101,7 +90,7 @@ export default function Countries() {
                 <span
                   className={`inline-flex items-center px-4 py-2  text-slate-700 text-sm rounded-full border border-slate-200/50 backdrop-blur-sm font-medium`}
                 >
-                  {country.description}
+                  {country.code}
                 </span>
               </div>
 

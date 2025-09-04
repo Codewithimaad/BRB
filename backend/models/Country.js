@@ -8,9 +8,19 @@ const countrySchema = new mongoose.Schema(
             trim: true,
             unique: true,
         },
+        // Arabic name (optional)
+        nameAr: {
+            type: String,
+            trim: true,
+        },
         titleShort: {
             type: String,
             required: true,
+            trim: true,
+        },
+        // Arabic short title (optional)
+        titleShortAr: {
+            type: String,
             trim: true,
         },
         flagUrl: {

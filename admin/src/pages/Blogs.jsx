@@ -18,9 +18,13 @@ const Blogs = () => {
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
+    titleAr: '',
     excerpt: '',
+    excerptAr: '',
     content: '',
+    contentAr: '',
     category: '',
+    categoryAr: '',
     isPublished: true,
     image: null,
   });
@@ -44,7 +48,7 @@ const Blogs = () => {
 
   const openCreate = () => {
     setEditingId(null);
-    setFormData({ title: '', excerpt: '', content: '', category: '', isPublished: true, image: null });
+    setFormData({ title: '', titleAr: '', excerpt: '', excerptAr: '', content: '', contentAr: '', category: '', categoryAr: '', isPublished: true, image: null });
     setFormOpen(true);
   };
 
@@ -52,9 +56,13 @@ const Blogs = () => {
     setEditingId(blog._id);
     setFormData({
       title: blog.title || '',
+      titleAr: blog.titleAr || '',
       excerpt: blog.excerpt || '',
+      excerptAr: blog.excerptAr || '',
       content: blog.content || '',
+      contentAr: blog.contentAr || '',
       category: (blog.category || []).join(', '),
+      categoryAr: (blog.categoryAr || []).join(', '),
       isPublished: blog.isPublished,
       image: null,
     });
@@ -88,13 +96,21 @@ const Blogs = () => {
     try {
       const data = new FormData();
       data.append('title', formData.title);
+      data.append('titleAr', formData.titleAr);
       data.append('excerpt', formData.excerpt);
+      data.append('excerptAr', formData.excerptAr);
       data.append('content', formData.content);
+      data.append('contentAr', formData.contentAr);
       const categoriesArray = formData.category
         .split(',')
         .map(t => t.trim())
         .filter(Boolean);
       data.append('category', JSON.stringify(categoriesArray));
+      const categoriesArArray = formData.categoryAr
+        .split(',')
+        .map(t => t.trim())
+        .filter(Boolean);
+      data.append('categoryAr', JSON.stringify(categoriesArArray));
       data.append('isPublished', String(formData.isPublished));
       if (formData.image) data.append('image', formData.image);
 
@@ -240,17 +256,37 @@ const Blogs = () => {
                         required
                       />
                     </div>
-                    
                     <div className="space-y-2">
-                      <label className="block text-sm font-medium text-slate-700">Categories</label>
+                      <label className="block text-sm font-medium text-slate-700">العنوان (Arabic)</label>
                       <input
                         type="text"
-                        value={formData.category}
-                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                        placeholder="Comma separated categories"
+                        value={formData.titleAr}
+                        onChange={(e) => setFormData({ ...formData, titleAr: e.target.value })}
+                        placeholder="عنوان المقال"
                         className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-200"
                       />
                     </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-slate-700">Categories</label>
+                    <input
+                      type="text"
+                      value={formData.category}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                      placeholder="Comma separated categories"
+                      className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-200"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-slate-700">التصنيفات (Arabic)</label>
+                    <input
+                      type="text"
+                      value={formData.categoryAr}
+                      onChange={(e) => setFormData({ ...formData, categoryAr: e.target.value })}
+                      placeholder="تصنيفات مفصولة بفاصلة"
+                      className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-200"
+                    />
                   </div>
                   
                   <div className="space-y-2">
@@ -260,6 +296,16 @@ const Blogs = () => {
                       value={formData.excerpt}
                       onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                       placeholder="Short description"
+                      className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-200"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-slate-700">ملخص (Arabic)</label>
+                    <input
+                      type="text"
+                      value={formData.excerptAr}
+                      onChange={(e) => setFormData({ ...formData, excerptAr: e.target.value })}
+                      placeholder="ملخص قصير"
                       className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-200"
                     />
                   </div>
@@ -273,6 +319,16 @@ const Blogs = () => {
                       rows={8}
                       className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-200"
                       required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-medium text-slate-700">المحتوى (Arabic)</label>
+                    <textarea
+                      value={formData.contentAr}
+                      onChange={(e) => setFormData({ ...formData, contentAr: e.target.value })}
+                      placeholder="محتوى المقال"
+                      rows={8}
+                      className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-200"
                     />
                   </div>
                   

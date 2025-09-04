@@ -29,7 +29,7 @@ const cardVariants = {
 };
 
 export default function Services() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
 
   // Refs & animations
@@ -64,7 +64,7 @@ export default function Services() {
         if (res.data.success) {
           const fetched = res.data.services
             .filter(s => s.isActive)
-            .map(s => ({ title: s.title, description: s.description, image: s.imageUrl || servicesHeroImg }));
+            .map(s => ({ title: s.title, titleAr: s.titleAr, description: s.description, descriptionAr: s.descriptionAr, image: s.imageUrl || servicesHeroImg }));
           setServices(fetched);
         }
       } catch (e) {
@@ -143,7 +143,7 @@ export default function Services() {
   {/* Title Section */}
   <div className="px-4 pb-5 text-center bg-gray-50">
     <h3 className="text-lg font-bold" style={{ color: "#60a685" }}>
-      {service.title}
+      {i18n.language === 'ar' && service.titleAr ? service.titleAr : service.title}
     </h3>
   </div>
 </motion.div>
