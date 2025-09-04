@@ -16,7 +16,7 @@ export default function BlogDetails() {
         setLoading(true);
         setError(null);
         const base = import.meta.env.VITE_BACKEND_URL || window.location.origin;
-        const res = await axios.get(`${base}/api/blogs/${id}`, { withCredentials: true });
+        const res = await axios.get(`${base}/api/blogs/${id}`);
         if (res.data.success) {
           setBlog(res.data.blog);
         } else {

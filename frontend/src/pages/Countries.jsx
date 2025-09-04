@@ -39,8 +39,8 @@ export default function Countries() {
   useEffect(() => {
     const loadCountries = async () => {
       try {
-        const base = import.meta.env.VITE_BACKEND_URL || window.location.origin;
-const res = await axios.get(`${base}/api/countries`, { withCredentials: true });
+        const base = import.meta.env.VITE_BACKEND_URL;
+const res = await axios.get(`${base}/api/countries`);
         if (res.data.success) {
           const fetched = res.data.countries
             .filter(c => c.isActive)
