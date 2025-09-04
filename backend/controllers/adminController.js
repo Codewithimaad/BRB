@@ -13,6 +13,8 @@ export const loginAdmin = async (req, res) => {
     try {
         const { username, password, rememberMe } = req.body;
 
+        console.log('🔐 Login attempt for username:', username);
+
         // Simple validation
         if (!username || !password) {
             return res.status(400).json({
@@ -23,6 +25,7 @@ export const loginAdmin = async (req, res) => {
 
         const admin = await Admin.findOne({ username });
         if (!admin) {
+            console.log('❌ Admin not found:', username);
             return res.status(400).json({
                 success: false,
                 message: "Invalid username or password."
@@ -31,6 +34,7 @@ export const loginAdmin = async (req, res) => {
 
         const isMatch = await bcrypt.compare(password, admin.password);
         if (!isMatch) {
+            console.log('❌ Password mismatch for:', username);
             return res.status(400).json({
                 success: false,
                 message: "Invalid username or password."
@@ -39,22 +43,38 @@ export const loginAdmin = async (req, res) => {
 
         // Set token expiry based on rememberMe
         const tokenExpiry = rememberMe ? "7d" : "12h";
-        const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: tokenExpiry });
+        const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { 
+            expiresIn: tokenExpiry 
+        });
 
-        res.cookie("token", token, {
+        console.log('✅ JWT Secret available:', !!process.env.JWT_SECRET);
+        console.log('✅ Token generated successfully');
+
+        const cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-            maxAge: rememberMe ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000,
-        });
+            maxAge: rememberMe ? 7 * 24 * 60 * 60 * 1000 : 12 * 60 * 60 * 1000,
+        };
+
+        console.log('🍪 Cookie options:', cookieOptions);
+
+        res.cookie("token", token, cookieOptions);
 
         res.json({
             success: true,
-            admin: { id: admin._id, username: admin.username },
+            admin: { 
+                id: admin._id, 
+                username: admin.username,
+                name: admin.name 
+            },
+            token: token // Optional: send token in response for debugging
         });
 
     } catch (error) {
-        console.error("Admin login error:", error);
+        console.error("❌ Admin login error:", error);
+        console.error("❌ JWT Secret available:", !!process.env.JWT_SECRET);
+        
         res.status(500).json({
             success: false,
             message: "Internal server error"
