@@ -18,11 +18,23 @@ connectDB();
 
 const app = express();
 
-// TEMPORARY - For testing only
-app.use(cors({
-  origin: true, // Allow all origins
-  credentials: true
-}));
+// const allowedOrigins = [
+//     process.env.CLIENT_URL,
+//     process.env.ADMIN_URL
+// ];
+
+
+// app.use(cors({
+//     origin: function (origin, callback) {
+//         if (!origin || allowedOrigins.includes(origin)) {
+//             callback(null, true);
+//         } else {
+//             callback(new Error("Not allowed by CORS"));
+//         }
+//     },
+//     credentials: true,
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+// }));
 
 
 // ✅ Helmet middleware for security headers (after CORS setup)
