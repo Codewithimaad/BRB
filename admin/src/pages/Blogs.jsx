@@ -28,6 +28,8 @@ const Blogs = () => {
     isPublished: true,
     image: null,
   });
+  // State to hold validation errors
+  const [validationErrors, setValidationErrors] = useState({});
 
   const fetchBlogs = async () => {
     try {
@@ -49,6 +51,7 @@ const Blogs = () => {
   const openCreate = () => {
     setEditingId(null);
     setFormData({ title: '', titleAr: '', excerpt: '', excerptAr: '', content: '', contentAr: '', category: '', categoryAr: '', isPublished: true, image: null });
+    setValidationErrors({}); // Clear errors on form open
     setFormOpen(true);
   };
 
@@ -66,6 +69,7 @@ const Blogs = () => {
       isPublished: blog.isPublished,
       image: null,
     });
+    setValidationErrors({}); // Clear errors on form open
     setFormOpen(true);
   };
 
@@ -93,6 +97,29 @@ const Blogs = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const errors = {};
+    const maxImageSize = 5 * 1024 * 1024; // 5MB in bytes
+
+    // --- Validation Logic ---
+    if (!formData.title.trim()) {
+      errors.title = 'Title is required.';
+    }
+    if (!formData.content.trim()) {
+      errors.content = 'Content is required.';
+    }
+    if (formData.image && formData.image.size > maxImageSize) {
+      errors.image = 'Image size must be less than 5MB.';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      MySwal.fire('Validation Error', 'Please fix the errors in the form.', 'error');
+      return; // Stop form submission
+    }
+    
+    setValidationErrors({}); // Clear errors if validation passes
+
     try {
       const data = new FormData();
       data.append('title', formData.title);
@@ -252,9 +279,9 @@ const Blogs = () => {
                         value={formData.title}
                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                         placeholder="Blog title"
-                        className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-200"
-                        required
+                        className={`w-full px-4 py-3 border rounded-xl focus:ring-2 transition-all duration-200 ${validationErrors.title ? 'border-red-500 focus:ring-red-500/30' : 'border-slate-200 focus:ring-emerald-500/30 focus:border-emerald-500'}`}
                       />
+                      {validationErrors.title && <p className="text-red-500 text-xs mt-1">{validationErrors.title}</p>}
                     </div>
                     <div className="space-y-2">
                       <label className="block text-sm font-medium text-slate-700">العنوان (Arabic)</label>
@@ -317,9 +344,9 @@ const Blogs = () => {
                       onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                       placeholder="Blog content"
                       rows={8}
-                      className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-200"
-                      required
+                      className={`w-full px-4 py-3 border rounded-xl focus:ring-2 transition-all duration-200 ${validationErrors.content ? 'border-red-500 focus:ring-red-500/30' : 'border-slate-200 focus:ring-emerald-500/30 focus:border-emerald-500'}`}
                     />
+                    {validationErrors.content && <p className="text-red-500 text-xs mt-1">{validationErrors.content}</p>}
                   </div>
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-slate-700">المحتوى (Arabic)</label>
@@ -366,6 +393,7 @@ const Blogs = () => {
                           <span className="text-sm text-slate-600 truncate">{formData.image.name}</span>
                         )}
                       </div>
+                      {validationErrors.image && <p className="text-red-500 text-xs mt-1">{validationErrors.image}</p>}
                     </div>
                   </div>
                   

@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }) => {
       setAdmin(data); // Set the complete admin profile
       return data;
     } catch (err) {
-      console.error("❌ Error fetching admin profile:", err);
       setAdmin(null); // Clear admin on error
       return null;
     } finally {
