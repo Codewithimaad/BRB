@@ -32,6 +32,22 @@ export default function Countries() {
   
   const isInView = useInView(countriesRef, { once: true, margin: "-100px" });
   const controls = useAnimation();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Set initial state
+    handleResize();
+
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (isInView) {
@@ -54,7 +70,7 @@ export default function Countries() {
               nameAr: c.nameAr,
               code: c.titleShort,
               codeAr: c.titleShortAr,
-              flag: c.flag || "🌍", // Use a default emoji if flag is missing
+              flag: c.flag || "🌍",
               image: c.flagUrl || "https://via.placeholder.com/400x300"
             }));
           setCountries(fetchedCountries);
@@ -65,18 +81,11 @@ export default function Countries() {
     };
 
     fetchCountries();
-  }, [t]);
+  }, []);
 
   return (
-    <div className="relative overflow-hidden bg-slate-950 text-white font-sans">
-      {/* Animated Background from ModernAbout component */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-green-950/20">
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(34,197,94,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(34,197,94,0.03)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_100%)]"></div>
-        </div>
-        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-green-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-green-400/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      </div>
+    <div className="relative overflow-hidden text-white font-sans">
+      
 
       <motion.section
         ref={countriesRef}
@@ -106,7 +115,7 @@ export default function Countries() {
           </motion.div>
 
           {/* Countries Grid with Animations */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {countries.map((country, index) => (
               <motion.div
                 key={index}
@@ -114,25 +123,43 @@ export default function Countries() {
                 transition={{ delay: index * 0.1 }}
                 className="group relative h-full"
               >
-                <div className="absolute -inset-px bg-gradient-to-br from-green-500/20 via-transparent to-green-400/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-sm"></div>
-                <div className="relative h-full p-8 bg-slate-900/50 backdrop-blur-xl border border-slate-800/50 rounded-3xl overflow-hidden group-hover:border-green-500/30 transition-all duration-700 group-hover:shadow-2xl group-hover:shadow-green-500/5 group-hover:-translate-y-2">
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-green-400/50 to-transparent"></div>
-                  <div className="flex flex-col items-center space-y-4 text-center">
+                {/* Conditional Rendering for Mobile and Desktop Views */}
+                {isMobile ? (
+                  // Mobile view: Simple list-style layout
+                  <div className="flex flex-col items-center p-4 bg-slate-900/50 backdrop-blur-xl border border-slate-800/50 rounded-xl">
                     <img
                       src={country.image}
                       alt={`${country.name} Flag`}
-                      className="w-16 h-12 object-cover rounded-md shadow-lg"
+                      className="w-12 h-9 object-cover rounded-md mb-2"
                     />
-                    <h3 className="text-2xl font-bold bg-gradient-to-br from-white to-green-200 bg-clip-text text-transparent group-hover:from-green-100 group-hover:to-green-300 transition-colors duration-700">
-                        {i18n.language === "ar" && country.nameAr ? country.nameAr : country.name}
+                    <h3 className="text-lg font-bold text-white">
+                      {i18n.language === "ar" && country.nameAr ? country.nameAr : country.name}
                     </h3>
-                    <span className="inline-flex items-center px-4 py-1 text-sm font-medium text-slate-400 rounded-full border border-slate-700/50 backdrop-blur-sm">
-                        {i18n.language === "ar" && country.codeAr ? country.codeAr : country.code}
-                    </span>
-                    <p className="text-slate-400 text-sm leading-relaxed">{country.tagline}</p>
                   </div>
-                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-green-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                </div>
+                ) : (
+                  // Desktop view: Full card structure
+                  <>
+                    <div className="absolute -inset-px bg-gradient-to-br from-green-500/20 via-transparent to-green-400/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-sm"></div>
+                    <div className="relative h-full p-8 bg-slate-900/50 backdrop-blur-xl border border-slate-800/50 rounded-3xl overflow-hidden group-hover:border-green-500/30 transition-all duration-700 group-hover:shadow-2xl group-hover:shadow-green-500/5 group-hover:-translate-y-2">
+                      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-green-400/50 to-transparent"></div>
+                      <div className="flex flex-col items-center space-y-4 text-center">
+                        <img
+                          src={country.image}
+                          alt={`${country.name} Flag`}
+                          className="w-16 h-12 object-cover rounded-md shadow-lg"
+                        />
+                        <h3 className="text-2xl font-bold bg-gradient-to-br from-white to-green-200 bg-clip-text text-transparent group-hover:from-green-100 group-hover:to-green-300 transition-colors duration-700">
+                          {i18n.language === "ar" && country.nameAr ? country.nameAr : country.name}
+                        </h3>
+                        <span className="inline-flex items-center px-4 py-1 text-sm font-medium text-slate-400 rounded-full border border-slate-700/50 backdrop-blur-sm">
+                          {i18n.language === "ar" && country.codeAr ? country.codeAr : country.code}
+                        </span>
+                        <p className="text-slate-400 text-sm leading-relaxed">{country.tagline}</p>
+                      </div>
+                      <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-green-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    </div>
+                  </>
+                )}
               </motion.div>
             ))}
           </div>

@@ -5,16 +5,14 @@ import axios from "axios";
 
 export default function Blogs() {
   const { t, i18n } = useTranslation();
-  const [isVisible, setIsVisible] = useState(false);
+  // Set isVisible to true immediately to avoid the delayed fade-in effect
+  const [isVisible, setIsVisible] = useState(true);
   const [activeCategory, setActiveCategory] = useState(t("all"));
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([t("all")]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
-
+  // The timer effect is no longer needed since we want immediate loading.
+  // The data fetching useEffect remains to load content on mount.
   useEffect(() => {
     const loadBlogs = async () => {
       try {

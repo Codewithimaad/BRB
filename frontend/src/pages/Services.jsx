@@ -44,15 +44,10 @@ const textReveal = {
 export default function Services() {
   const { t, i18n } = useTranslation();
   const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true); // Add a loading state
   const servicesRef = useRef(null);
   const servicesInView = useInView(servicesRef, { once: true, margin: "-100px" });
   const servicesControls = useAnimation();
-
-  useEffect(() => {
-    if (servicesInView) {
-      servicesControls.start("visible");
-    }
-  }, [servicesInView, servicesControls]);
 
   useEffect(() => {
     const loadServices = async () => {
@@ -74,10 +69,20 @@ export default function Services() {
         }
       } catch (e) {
         console.error("Failed to load services", e);
+      } finally {
+        setLoading(false); // Set loading to false after fetch is complete
       }
     };
+
     loadServices();
   }, []);
+
+  // Use a separate useEffect to handle the animations
+  useEffect(() => {
+    if (servicesInView && services.length > 0) {
+      servicesControls.start("visible");
+    }
+  }, [servicesInView, servicesControls, services]);
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-slate-950 text-white font-sans">
@@ -126,58 +131,73 @@ export default function Services() {
 
       {/* Services Grid */}
       <section ref={servicesRef} className="relative z-10 px-6 pb-24">
-        <motion.div
-          initial="hidden"
-          animate={servicesControls}
-          variants={containerVariants}
-          className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12"
-        >
-          {services.map((service, index) => (
-            <motion.div
-              key={service.id || index}
-              variants={itemVariants}
-              className="group relative h-full"
-            >
-              <div className="absolute -inset-px bg-gradient-to-br from-green-500/20 via-transparent to-green-400/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-sm"></div>
-              <div className="relative h-full p-8 bg-slate-900/50 backdrop-blur-xl border border-slate-800/50 rounded-3xl overflow-hidden group-hover:border-green-500/30 transition-all duration-700 group-hover:shadow-2xl group-hover:shadow-green-500/5 group-hover:-translate-y-2">
-                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-green-400/50 to-transparent"></div>
-                <div className="relative">
-                  <div className="relative mb-6">
-                    <div className="aspect-video w-full relative">
-                      <div className="absolute inset-0 bg-gradient-to-br from-green-400/5 to-green-500/5 rounded-2xl group-hover:from-green-400/10 group-hover:to-green-500/10 transition-all duration-700"></div>
-                      <div className="relative w-full h-full p-6 rounded-2xl bg-slate-800/30 border border-slate-700/50 group-hover:border-green-500/20 transition-all duration-700 backdrop-blur-sm">
-                        <img
-                          src={service.image}
-                          alt={i18n.language === 'ar' ? service.titleAr : service.title}
-                          className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 group-hover:brightness-110"
-                        />
-                        <div className="absolute top-2 left-2 w-3 h-3 border-l-2 border-t-2 border-green-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                        <div className="absolute bottom-2 right-2 w-3 h-3 border-r-2 border-b-2 border-green-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+        {loading ? (
+          <div className="flex justify-center items-center h-48">
+            <svg className="animate-spin h-10 w-10 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
+        ) : (
+          <motion.div
+            initial="hidden"
+            animate={servicesControls}
+            variants={containerVariants}
+            className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12"
+          >
+            {services.length > 0 ? (
+              services.map((service, index) => (
+                <motion.div
+                  key={service.id || index}
+                  variants={itemVariants}
+                  className="group relative h-full"
+                >
+                  <div className="absolute -inset-px bg-gradient-to-br from-green-500/20 via-transparent to-green-400/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-sm"></div>
+                  <div className="relative h-full p-8 bg-slate-900/50 backdrop-blur-xl border border-slate-800/50 rounded-3xl overflow-hidden group-hover:border-green-500/30 transition-all duration-700 group-hover:shadow-2xl group-hover:shadow-green-500/5 group-hover:-translate-y-2">
+                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-green-400/50 to-transparent"></div>
+                    <div className="relative">
+                      <div className="relative mb-6">
+                        <div className="aspect-video w-full relative">
+                          <div className="absolute inset-0 bg-gradient-to-br from-green-400/5 to-green-500/5 rounded-2xl group-hover:from-green-400/10 group-hover:to-green-500/10 transition-all duration-700"></div>
+                          <div className="relative w-full h-full p-6 rounded-2xl bg-slate-800/30 border border-slate-700/50 group-hover:border-green-500/20 transition-all duration-700 backdrop-blur-sm">
+                            <img
+                              src={service.image}
+                              alt={i18n.language === 'ar' ? service.titleAr : service.title}
+                              className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 group-hover:brightness-110"
+                            />
+                            <div className="absolute top-2 left-2 w-3 h-3 border-l-2 border-t-2 border-green-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                            <div className="absolute bottom-2 right-2 w-3 h-3 border-r-2 border-b-2 border-green-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                          </div>
+                          <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full opacity-60 animate-ping group-hover:animate-pulse"></div>
+                          <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-green-500 rounded-full opacity-40 animate-pulse" style={{ animationDelay: '1s' }}></div>
+                        </div>
                       </div>
-                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full opacity-60 animate-ping group-hover:animate-pulse"></div>
-                      <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-green-500 rounded-full opacity-40 animate-pulse" style={{ animationDelay: '1s' }}></div>
+                      <div className="text-center space-y-4">
+                        <h3 className="text-2xl font-bold bg-gradient-to-br from-white to-green-200 bg-clip-text text-transparent group-hover:from-green-100 group-hover:to-green-300 transition-all duration-700">
+                          {i18n.language === 'ar' ? service.titleAr : service.title}
+                        </h3>
+                        <p className="text-slate-400 text-sm">{i18n.language === 'ar' ? service.descriptionAr : service.description}</p>
+                        <div className="flex justify-center">
+                          <div className="w-0 h-0.5 bg-gradient-to-r from-green-400 to-green-500 group-hover:w-16 transition-all duration-700 ease-out"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-green-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 scale-75 group-hover:scale-100 shadow-lg shadow-green-500/50">
+                    <div className="absolute inset-0.5 bg-slate-900 rounded-full flex items-center justify-center">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                     </div>
                   </div>
-                  <div className="text-center space-y-4">
-                    <h3 className="text-2xl font-bold bg-gradient-to-br from-white to-green-200 bg-clip-text text-transparent group-hover:from-green-100 group-hover:to-green-300 transition-all duration-700">
-                      {i18n.language === 'ar' ? service.titleAr : service.title}
-                    </h3>
-                    <p className="text-slate-400 text-sm">{i18n.language === 'ar' ? service.descriptionAr : service.description}</p>
-                    <div className="flex justify-center">
-                      <div className="w-0 h-0.5 bg-gradient-to-r from-green-400 to-green-500 group-hover:w-16 transition-all duration-700 ease-out"></div>
-                    </div>
-                  </div>
-                </div>
-                <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-green-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                </motion.div>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-20">
+                <p className="text-lg text-slate-400">{t("no_services_found")}</p>
               </div>
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-700 scale-75 group-hover:scale-100 shadow-lg shadow-green-500/50">
-                <div className="absolute inset-0.5 bg-slate-900 rounded-full flex items-center justify-center">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+            )}
+          </motion.div>
+        )}
       </section>
 
       {/* CTA Section */}

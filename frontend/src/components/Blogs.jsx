@@ -62,7 +62,7 @@ export default function Blogs() {
       }
     };
     load();
-  }, [i18n.language]);
+  }, []);
 
   return (
     <div className="relative overflow-hidden bg-slate-950 text-white font-sans">

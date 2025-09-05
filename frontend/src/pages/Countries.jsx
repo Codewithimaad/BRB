@@ -118,9 +118,7 @@ export default function Countries() {
 
                   {/* Flag and country info */}
                   <div className="relative p-6 flex flex-col items-center text-center">
-                    <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 p-4 bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 rounded-full shadow-lg">
-                      <div className="text-4xl">{country.flag}</div>
-                    </div>
+                   
                     <div className="mt-8">
                       <h3 className="text-2xl font-bold bg-gradient-to-br from-white to-green-200 bg-clip-text text-transparent mb-2">
                         {i18n.language === "ar" && country.nameAr ? country.nameAr : country.name}
