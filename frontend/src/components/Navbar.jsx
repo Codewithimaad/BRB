@@ -149,7 +149,7 @@ const Navbar = () => {
                 to="/contact"
                 className="hidden md:inline-flex items-center px-5 py-2.5 rounded-xl font-medium bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 transition-all duration-300 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
               >
-                {t("get_started")}
+                {t("get_consultation")}
               </Link>
 
               {/* Mobile Menu Button */}

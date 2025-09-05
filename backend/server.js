@@ -7,6 +7,7 @@ import blogRoutes from "./routes/blogRoutes.js";
 import cloudinary from "./config/cloudinary.js"; // ✅ Imported
 import serviceRoutes from "./routes/serviceRoutes.js";
 import countryRoutes from "./routes/countryRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js"; // ✅ Contact routes
 import cookieParser from "cookie-parser";
 
 // Load environment variables
@@ -51,6 +52,8 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/countries", countryRoutes);
+app.use("/api/contact", contactRoutes); // ✅ Contact routes
+
 
 
 // Error handler middleware

@@ -1,9 +1,13 @@
 import { useTranslation } from "react-i18next";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Navbar from "../components/Navbar";
 import { motion } from "framer-motion";
+import axios from "axios";
+import { ApiContext } from "../context/apiContext";
+
 
 export default function Contact() {
+    const { backendUrl } = useContext(ApiContext);
   const { t } = useTranslation();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [formData, setFormData] = useState({
@@ -26,30 +30,35 @@ export default function Contact() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    console.log('Form submitted:', formData);
-    setIsSubmitting(false);
-    
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      company: '',
-      phone: '',
-      service: '',
-      budget: '',
-      timeline: '',
-      message: ''
-    });
-    
-    alert(t("message_sent_success"));
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+
+  try {
+    const { data } = await axios.post(`${backendUrl}/api/contact`, formData);
+
+    if (data.success) {
+      alert(t("message_sent_success"));
+      setFormData({
+        name: '',
+        email: '',
+        company: '',
+        phone: '',
+        service: '',
+        budget: '',
+        timeline: '',
+        message: ''
+      });
+    } else {
+      alert("❌ Failed to send message");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("❌ Server error, try again later");
+  }
+
+  setIsSubmitting(false);
+};
 
   useEffect(() => {
     const handleMouseMove = (e) => {
