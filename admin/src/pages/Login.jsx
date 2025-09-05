@@ -90,15 +90,15 @@ const Login = () => {
 
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-100 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-white md:bg-gradient-to-br from-emerald-50 to-green-100 flex items-center justify-center p-4">
             <div className="w-full max-w-md md:bg-white md:rounded-2xl md:shadow-2xl overflow-hidden">
                 <div className="p-8">
                     <div className="text-center mb-8">
                         <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-green-400 to-green-700 rounded-2xl flex items-center justify-center shadow-lg">
                             <User className="w-10 h-10 text-white" />
                         </div>
-                        <h1 className="text-3xl font-bold text-gray-800 mb-2">Magical Calligraphy</h1>
-                        <p className="text-gray-600">Sign in to continue to your account</p>
+                        <h1 className="text-3xl font-bold text-gray-800 mb-2">Business Registration Portal</h1>
+                        <p className="text-gray-600">Sign in to enter admin dashboard</p>
                     </div>
 
                     {errors.general && (

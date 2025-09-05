@@ -1,57 +1,109 @@
 import { useTranslation } from "react-i18next";
-import { useState, useEffect } from "react";
-import heroImage from "../assets/hero.jpg"; // Replace with your hero image
+import { useRef, useEffect } from "react";
+import { motion, useInView, useAnimation } from "framer-motion";
+import heroImage from "../assets/hero.jpg";
+
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.1
+    }
+  }
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: "easeOut" } }
+};
 
 export default function Hero() {
   const { t } = useTranslation();
-  const [isVisible, setIsVisible] = useState(false);
+  const heroRef = useRef(null);
+  const isInView = useInView(heroRef, { once: true, margin: "-100px" });
+  const controls = useAnimation();
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
+    if (isInView) {
+      controls.start("visible");
+    }
+  }, [controls, isInView]);
 
   return (
-    <div className="relative min-h-[100vh] bg-green-900 py-16 md:py-24">
-      {/* Background Image + Gradient Overlay */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroImage})` }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-green-900/90 via-green-900/60 to-transparent"></div>
+    <div className="relative min-h-[100vh] overflow-hidden font-sans">
+      {/* Animated Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center" 
+          style={{ backgroundImage: `url(${heroImage})` }}
+        >
+          {/* Subtle gradient overlay to match the 'about' page's dark theme */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-green-950/20">
+            {/* The same grid pattern and blur effects for visual consistency */}
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(34,197,94,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(34,197,94,0.03)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_100%)]"></div>
+          </div>
+        </div>
       </div>
 
       {/* Hero Content */}
-      <section className="relative z-10 flex flex-col justify-center h-full px-6 md:px-16 max-w-3xl">
-        <div
-          className={`transition-all duration-1000 ease-out transform ${
-            isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
-          }`}
-        >
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-4 md:mb-6">
-            {t("hero_title")}
-          </h1>
-          <p className="text-lg md:text-xl text-white/80 max-w-2xl mb-8 md:mb-12 leading-relaxed">
-            {t("hero_subtitle")}
-          </p>
+      <motion.section
+        ref={heroRef}
+        initial="hidden"
+        animate={controls}
+        variants={staggerContainer}
+        className="relative z-10 flex flex-col justify-center h-full min-h-[100vh] px-6 md:px-16 max-w-7xl mx-auto"
+      >
+        <div className="max-w-3xl space-y-8">
+          {/* Added a subtle animated badge at the top */}
+          <motion.div
+            variants={scaleIn}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full backdrop-blur-sm"
+          >
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-green-300">
+              🏆 {t("hero_tagline")}
+            </span>
+          </motion.div>
 
-          {/* Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
+          <motion.h1 
+            variants={fadeInUp} 
+            className="text-5xl md:text-7xl font-black leading-tight bg-gradient-to-br from-white via-green-100 to-green-400 bg-clip-text text-transparent"
+          >
+            {t("hero_title")}
+          </motion.h1>
+
+          <motion.p 
+            variants={fadeInUp} 
+            className="text-xl md:text-2xl text-slate-400 leading-relaxed font-medium"
+          >
+            {t("hero_subtitle")}
+          </motion.p>
+
+          {/* Buttons with the same hover and gradient effects */}
+          <motion.div variants={fadeInUp} className="flex flex-wrap gap-4 pt-4">
             <a
               href="/contact"
-              className="bg-green-600/90 backdrop-blur-sm hover:bg-green-700/90 text-white px-8 py-4 rounded-lg font-semibold text-lg shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              className="px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
             >
               {t("get_started")}
             </a>
             <a
               href="/services"
-              className="bg-green-500/90 backdrop-blur-sm hover:bg-green-600/90 text-white px-8 py-4 rounded-lg font-semibold text-lg shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              className="px-8 py-4 bg-slate-800/50 backdrop-blur-sm text-white rounded-2xl font-bold text-lg border border-slate-700/50 hover:bg-slate-700/50 hover:border-green-500/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
             >
               {t("explore")}
             </a>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 }
