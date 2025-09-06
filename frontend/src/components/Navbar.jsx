@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import LanguageSwitcher from "./LanguageSwitcher";
-import logo from "../assets/brp_logo.png";
+import logo from "../assets/logo.png";
 
 // Icons
 const MenuIcon = () => (
@@ -115,7 +115,7 @@ const Navbar = () => {
   <img
     src={logo}
     alt="Business Registration Portal Logo"
-    className="h-35 md:h-50 w-auto"
+    className="h-30 w-auto"
   />
 </Link>
 

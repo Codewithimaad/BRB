@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import DashboardLayout from '../components/DashboardLayout';
 import axios from 'axios';
 import { AuthContext } from "../context/authContext";
@@ -24,8 +24,10 @@ const Countries = () => {
     isActive: true,
     flag: null,
   });
+  const [formErrors, setFormErrors] = useState({});
 
   const fetchCountries = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(`${backendUrl}/api/countries`, { params: { search } });
       if (res.data.success) setCountries(res.data.countries);
@@ -45,6 +47,7 @@ const Countries = () => {
   const openCreate = () => {
     setEditingId(null);
     setFormData({ name: '', nameAr: '', titleShort: '', titleShortAr: '', isActive: true, flag: null });
+    setFormErrors({});
     setFormOpen(true);
   };
 
@@ -58,6 +61,7 @@ const Countries = () => {
       isActive: country.isActive,
       flag: null,
     });
+    setFormErrors({});
     setFormOpen(true);
   };
 
@@ -83,8 +87,25 @@ const Countries = () => {
     }
   };
 
+  const validateForm = () => {
+    let errors = {};
+    if (!formData.name.trim()) {
+      errors.name = 'Country Name is required.';
+    }
+    if (!formData.titleShort.trim()) {
+      errors.titleShort = 'Short Title is required.';
+    }
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const data = new FormData();
       data.append('name', formData.name);
@@ -196,36 +217,44 @@ const Countries = () => {
                 <button onClick={() => setFormOpen(false)} className="px-3 py-1 rounded-lg bg-slate-100">Close</button>
               </div>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Country Name"
-                  className="w-full px-4 py-3 border rounded-xl"
-                  required
-                />
-                <input
-                  type="text"
-                  value={formData.nameAr}
-                  onChange={(e) => setFormData({ ...formData, nameAr: e.target.value })}
-                  placeholder="اسم الدولة (Arabic)"
-                  className="w-full px-4 py-3 border rounded-xl"
-                />
-                <input
-                  type="text"
-                  value={formData.titleShort}
-                  onChange={(e) => setFormData({ ...formData, titleShort: e.target.value })}
-                  placeholder="Short Title"
-                  className="w-full px-4 py-3 border rounded-xl"
-                  required
-                />
-                <input
-                  type="text"
-                  value={formData.titleShortAr}
-                  onChange={(e) => setFormData({ ...formData, titleShortAr: e.target.value })}
-                  placeholder="عنوان قصير (Arabic)"
-                  className="w-full px-4 py-3 border rounded-xl"
-                />
+                <div>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="Country Name"
+                    className="w-full px-4 py-3 border rounded-xl"
+                  />
+                  {formErrors.name && <p className="mt-1 text-sm text-red-500">{formErrors.name}</p>}
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    value={formData.nameAr}
+                    onChange={(e) => setFormData({ ...formData, nameAr: e.target.value })}
+                    placeholder="اسم الدولة (Arabic)"
+                    className="w-full px-4 py-3 border rounded-xl"
+                  />
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    value={formData.titleShort}
+                    onChange={(e) => setFormData({ ...formData, titleShort: e.target.value })}
+                    placeholder="Short Title"
+                    className="w-full px-4 py-3 border rounded-xl"
+                  />
+                  {formErrors.titleShort && <p className="mt-1 text-sm text-red-500">{formErrors.titleShort}</p>}
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    value={formData.titleShortAr}
+                    onChange={(e) => setFormData({ ...formData, titleShortAr: e.target.value })}
+                    placeholder="عنوان قصير (Arabic)"
+                    className="w-full px-4 py-3 border rounded-xl"
+                  />
+                </div>
                 <div className="flex items-center gap-4">
                   <label className="flex items-center space-x-2">
                     <input
@@ -255,5 +284,3 @@ const Countries = () => {
 };
 
 export default Countries;
-
-

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 export default function Contact() {
   // Corrected to specify the 'contact' namespace
-  const { t, i18n } = useTranslation('contact');
+  const { t, i18n } = useTranslation();
 
   const [isVisible, setIsVisible] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);

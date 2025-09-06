@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useInView, useAnimation } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { FaScaleBalanced, FaBullseye, FaRocket, FaHandshake, FaCommentDots, FaGear } from "react-icons/fa6";
-
+  
 
 // Animation variants
 const fadeInUp = {

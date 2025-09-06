@@ -265,7 +265,7 @@ export default function Contact() {
                       value={formData.name}
                       onChange={handleInputChange}
                       className={`w-full px-4 py-3 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 ${errors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-700'}`}
-                      placeholder="Enter full name"
+                      placeholder={t("enter_full_name")}
                     />
                     {errors.name && <p className="mt-2 text-sm text-red-500">{errors.name}</p>}
                   </div>
@@ -278,7 +278,7 @@ export default function Contact() {
                       value={formData.email}
                       onChange={handleInputChange}
                       className={`w-full px-4 py-3 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-700'}`}
-                      placeholder="Enter email address"
+                      placeholder={t("enter_email_address")}
                     />
                     {errors.email && <p className="mt-2 text-sm text-red-500">{errors.email}</p>}
                   </div>
@@ -295,7 +295,7 @@ export default function Contact() {
                       value={formData.company}
                       onChange={handleInputChange}
                       className={`w-full px-4 py-3 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 ${errors.company ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-700'}`}
-                      placeholder="Enter company name"
+                      placeholder={t("enter_company_name")}
                     />
                     {errors.company && <p className="mt-2 text-sm text-red-500">{errors.company}</p>}
                   </div>
@@ -308,7 +308,7 @@ export default function Contact() {
                       value={formData.phone}
                       onChange={handleInputChange}
                       className={`w-full px-4 py-3 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 ${errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-700'}`}
-                      placeholder="Enter phone number"
+                      placeholder={t("enter_phone_number")}
                     />
                     {errors.phone && <p className="mt-2 text-sm text-red-500">{errors.phone}</p>}
                   </div>
@@ -317,7 +317,8 @@ export default function Contact() {
                 {/* Service & Budget */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="relative">
-                    <label htmlFor="service" className="block text-sm font-medium text-slate-400 mb-2">Service Interest</label>
+                    <label htmlFor="service" className="block text-sm font-medium text-slate-400 mb-2">
+                    {t("service_interest")}</label>
                     <select
                       id="service"
                       name="service"
@@ -331,7 +332,7 @@ export default function Contact() {
                     {errors.service && <p className="mt-2 text-sm text-red-500">{errors.service}</p>}
                   </div>
                   <div className="relative">
-                    <label htmlFor="budget" className="block text-sm font-medium text-slate-400 mb-2">Budget Range</label>
+                    <label htmlFor="budget" className="block text-sm font-medium text-slate-400 mb-2">{t("budget_range")}</label>
                     <select
                       id="budget"
                       name="budget"
@@ -348,7 +349,7 @@ export default function Contact() {
 
                 {/* Timeline */}
                 <div className="relative">
-                  <label htmlFor="timeline" className="block text-sm font-medium text-slate-400 mb-2">Project Timeline</label>
+                  <label htmlFor="timeline" className="block text-sm font-medium text-slate-400 mb-2"> {t("project_timeline")}</label>
                   <select
                     id="timeline"
                     name="timeline"
@@ -372,7 +373,7 @@ export default function Contact() {
                     value={formData.message}
                     onChange={handleInputChange}
                     className={`w-full px-4 py-3 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 ${errors.message ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-700'}`}
-                    placeholder="Type your message here"
+                    placeholder={t("enter_your_message")}
                   />
                   {errors.message && <p className="mt-2 text-sm text-red-500">{errors.message}</p>}
                 </div>

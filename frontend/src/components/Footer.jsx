@@ -1,6 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaLinkedinIn, FaTwitter, FaFacebookF, FaInstagram, FaYoutube } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import logo from '../assets/logo.png';
+
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -40,9 +43,17 @@ export default function Footer() {
           {/* Company Info and Social Links */}
           <div className="md:col-span-2">
             <div className="flex items-center mb-6">
-              <span className="text-3xl md:text-4xl font-black bg-gradient-to-br from-green-500 to-green-300 bg-clip-text text-transparent tracking-wide">
-                BRP
-              </span>
+              <Link
+  to="/"
+  className="flex flex-col items-center justify-center transition-transform duration-300 hover:scale-105"
+  onClick={() => setActiveItem("/")}
+>
+  <img
+    src={logo}
+    alt="Business Registration Portal Logo"
+    className="h-30 w-auto"
+  />
+</Link>
             </div>
             <p className="text-slate-500 mb-6 max-w-lg leading-relaxed">
               {t('hero_subtitle')}
@@ -63,7 +74,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div className="flex flex-col">
-            <h3 className="text-lg font-semibold text-white mb-6">Quick Links</h3>
+            <h3 className="text-lg font-semibold text-white mb-6">{t("quick_links")}</h3>
             <ul className="space-y-4">
               {links.map((link) => (
                 <li key={link.key}>

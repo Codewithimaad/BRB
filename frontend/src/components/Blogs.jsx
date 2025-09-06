@@ -52,7 +52,7 @@ export default function Blogs() {
               excerpt: i18n.language === "ar" && b.excerptAr ? b.excerptAr : b.excerpt,
               category: Array.isArray(b.category) ? b.category[0] : b.category,
               date: new Date(b.publishedAt || b.createdAt).toLocaleDateString(),
-              author: "Administrator",
+              author: b.author || t("adminitraion"),
               imageUrl: b.imageUrl || "https://via.placeholder.com/600x400?text=Blog+Cover",
             }));
           setBlogs(fetched);
