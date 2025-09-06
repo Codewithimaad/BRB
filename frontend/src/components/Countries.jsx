@@ -163,6 +163,23 @@ export default function Countries() {
               </motion.div>
             ))}
           </div>
+
+        {/* CTA button section */}
+          <div className="flex justify-center mt-16">
+            <motion.a
+              href="/countries"
+              variants={fadeInUp}
+              whileHover={{ scale: 1.05, boxShadow: "0 8px 20px rgba(34, 197, 94, 0.4)" }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full font-bold text-lg shadow-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 ease-in-out relative overflow-hidden"
+            >
+              <span className="relative z-10">
+                {t("countries_cta_button")}
+              </span>
+              <span className="absolute inset-0 bg-white opacity-0 transition-opacity duration-300 group-hover:opacity-10"></span>
+            </motion.a>
+          </div>
+          
         </div>
       </motion.section>
     </div>
