@@ -103,7 +103,7 @@ export default function Countries() {
             >
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               <span className="text-sm font-medium text-green-300">
-                🌍 {t("countries_section_subtitle")}
+                {t("countries_section_subtitle")}
               </span>
             </motion.div>
             <h2 className="text-4xl md:text-5xl font-black bg-gradient-to-br from-white to-green-200 bg-clip-text text-transparent mb-6">

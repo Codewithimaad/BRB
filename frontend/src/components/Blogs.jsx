@@ -89,7 +89,7 @@ export default function Blogs() {
             >
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               <span className="text-sm font-medium text-green-300">
-                📚 {t("blogs_section_tagline")}
+               {t("blogs_section_tagline")}
               </span>
             </motion.div>
             <h2 className="text-4xl md:text-5xl font-black bg-gradient-to-br from-white to-green-200 bg-clip-text text-transparent mb-6">

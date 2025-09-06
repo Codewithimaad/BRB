@@ -1,62 +1,44 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
-
+import { useTranslation } from "react-i18next";
 
 export default function Contact() {
-  // Removed unsupported dependencies: react-i18next and framer-motion.
-  // The translations are now hardcoded in English, and animations are handled with CSS.
-  
+  // Corrected to specify the 'contact' namespace
+  const { t, i18n } = useTranslation('contact');
+
   const [isVisible, setIsVisible] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Replaces useInView and useAnimation from framer-motion.
-  // We use a simple useEffect to trigger the visibility state when the component mounts.
   useEffect(() => {
     setIsVisible(true);
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form data submitted:', formData);
-    // Simulate form submission. In a real app, you would send this to a backend.
-    setShowSuccess(true);
-    setFormData({ name: '', email: '', message: '' });
-    // Hide the success message after a few seconds
-    setTimeout(() => setShowSuccess(false), 5000);
-  };
-
   const contactInfo = [
     {
       icon: <MdEmail />,
-      title: "Email Address",
+      title: t("email_title"),
       value: "hello@company.com",
       link: "mailto:hello@company.com",
-      description: "Send us a message directly to our inbox."
+      description: t("email_description")
     },
     {
       icon: <MdPhone />,
-      title: "Phone",
+      title: t("phone_title"),
       value: "+1 (555) 123-4567",
       link: "tel:+15551234567",
-      description: "Reach our support team during business hours."
+      description: t("phone_description")
     },
     {
       icon: <MdLocationOn />,
-      title: "Office",
+      title: t("office_title"),
       value: "123 Business Ave, Suite 100",
       link: "#",
-      description: "Visit our office for a personalized meeting."
+      description: t("office_description")
     }
   ];
 
   return (
-    <div className="relative overflow-hidden bg-slate-950 text-white font-sans min-h-screen">
+    <div className="relative overflow-hidden bg-slate-950 text-white font-sans min-h-screen" dir={i18n.dir()}>
       {/* Animated Background */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-green-950/20">
@@ -71,14 +53,14 @@ export default function Contact() {
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full mb-6 backdrop-blur-sm transition-all duration-500" style={{ transitionDelay: '400ms', opacity: isVisible ? 1 : 0, transform: isVisible ? 'scale(1)' : 'scale(0.8)' }}>
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               <span className="text-sm font-medium text-green-300">
-                💬 Get in Touch
+                {t("get_in_touch")}
               </span>
             </div>
             <h2 className="text-4xl md:text-5xl font-black bg-gradient-to-br from-white to-green-200 bg-clip-text text-transparent mb-6">
-              Contact Us
+              {t("title")}
             </h2>
             <p className="text-xl text-slate-400 max-w-3xl mx-auto">
-              We're here to help! Reach out to us through any of the channels below.
+              {t("description")}
             </p>
           </div>
 
@@ -118,15 +100,18 @@ export default function Contact() {
             ))}
           </div>
 
-         
           {/* Custom Success Message Box */}
           {showSuccess && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
               <div className="relative p-8 bg-slate-900 border border-green-500/50 rounded-2xl shadow-lg w-full max-w-sm text-center transform scale-95 animate-fade-in transition-all duration-300">
-                <h4 className="text-xl font-bold text-green-400 mb-2">Success!</h4>
-                <p className="text-sm text-slate-300">Your message has been sent successfully. We will be in touch shortly.</p>
+                <h4 className="text-xl font-bold text-green-400 mb-2">
+                  {t("success_title")}
+                </h4>
+                <p className="text-sm text-slate-300">
+                  {t("success_message")}
+                </p>
                 <button onClick={() => setShowSuccess(false)} className="mt-4 px-4 py-2 text-sm text-white bg-green-600 rounded-md hover:bg-green-700 transition-colors">
-                  Close
+                  {t("close_button")}
                 </button>
               </div>
             </div>

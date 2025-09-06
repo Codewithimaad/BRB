@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import LanguageSwitcher from "./LanguageSwitcher";
+import logo from "../assets/brp_logo.png";
 
 // Icons
 const MenuIcon = () => (
@@ -105,16 +106,19 @@ const Navbar = () => {
       >
         <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link 
-              to="/" 
-              className="flex items-center space-x-2 transition-transform duration-300 hover:scale-105"
-              onClick={() => setActiveItem("/")}
-            >
-              <span className="text-xl font-bold text-white">
-                BRP
-              </span>
-            </Link>
+           {/* Logo */}
+<Link
+  to="/"
+  className="flex flex-col items-center justify-center transition-transform duration-300 hover:scale-105"
+  onClick={() => setActiveItem("/")}
+>
+  <img
+    src={logo}
+    alt="Business Registration Portal Logo"
+    className="h-35 md:h-50 w-auto"
+  />
+</Link>
+
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-1">

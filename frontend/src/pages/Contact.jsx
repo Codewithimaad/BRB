@@ -1,13 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useContext } from "react";
-import Navbar from "../components/Navbar";
 import { motion } from "framer-motion";
-import axios from "axios";
 import { ApiContext } from "../context/apiContext";
 
-
 export default function Contact() {
-    const { backendUrl } = useContext(ApiContext);
+  const { backendUrl } = useContext(ApiContext);
   const { t } = useTranslation();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [formData, setFormData] = useState({
@@ -21,50 +18,91 @@ export default function Contact() {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+  const validateForm = () => {
+    const newErrors = {};
 
-  try {
-    const { data } = await axios.post(`${backendUrl}/api/contact`, formData);
-
-    if (data.success) {
-      alert(t("message_sent_success"));
-      setFormData({
-        name: '',
-        email: '',
-        company: '',
-        phone: '',
-        service: '',
-        budget: '',
-        timeline: '',
-        message: ''
-      });
-    } else {
-      alert("❌ Failed to send message");
+    if (!formData.name.trim()) newErrors.name = t("name_required");
+    if (!formData.email.trim()) {
+      newErrors.email = t("email_required");
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = t("email_invalid");
     }
-  } catch (err) {
-    console.error(err);
-    alert("❌ Server error, try again later");
-  }
+    if (!formData.message.trim()) newErrors.message = t("message_required");
 
-  setIsSubmitting(false);
-};
+    if (formData.company.trim() && (formData.company.length < 2 || formData.company.length > 100)) {
+      newErrors.company = t("company_invalid");
+    }
+
+    const phoneRegex = /^\+?(\d[\d\s-()]{7,20})\d$/;
+    if (formData.phone.trim() && !phoneRegex.test(formData.phone)) {
+      newErrors.phone = t("phone_invalid");
+    }
+
+    if (formData.service && formData.service === t("select_service")) {
+      newErrors.service = t("service_required");
+    }
+    if (formData.budget && formData.budget === t("select_budget")) {
+      newErrors.budget = t("budget_required");
+    }
+    if (formData.timeline && formData.timeline === t("select_timeline")) {
+      newErrors.timeline = t("timeline_required");
+    }
+
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setErrors({});
+    setSuccessMessage('');
+
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    // Professional WhatsApp message
+    const phone = '+966573672733';
+    const text = `New Contact Inquiry:
+- Name: ${formData.name}
+- Email: ${formData.email}
+- Company: ${formData.company || 'N/A'}
+- Phone: ${formData.phone || 'N/A'}
+- Service Interest: ${formData.service || 'N/A'}
+- Budget Range: ${formData.budget || 'N/A'}
+- Project Timeline: ${formData.timeline || 'N/A'}
+- Message: ${formData.message}`;
+
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank');
+
+    setFormData({
+      name: '',
+      email: '',
+      company: '',
+      phone: '',
+      service: '',
+      budget: '',
+      timeline: '',
+      message: ''
+    });
+    setSuccessMessage("Your message is ready to send via WhatsApp.");
+  };
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    
+    const handleMouseMove = (e) => setMousePosition({ x: e.clientX, y: e.clientY });
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
@@ -117,25 +155,12 @@ const handleSubmit = async (e) => {
     t("extended_6_plus_months")
   ];
 
-  // Animation variants for different sections
-  const fadeInUp = {
-    initial: { y: 60, opacity: 0 },
-    animate: { y: 0, opacity: 1, transition: { duration: 0.6 } }
-  };
-
-  const staggerContainer = {
-    initial: { opacity: 0 },
-    animate: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-      }
-    }
-  };
+  const fadeInUp = { initial: { y: 60, opacity: 0 }, animate: { y: 0, opacity: 1, transition: { duration: 0.6 } } };
+  const staggerContainer = { initial: { opacity: 0 }, animate: { opacity: 1, transition: { staggerChildren: 0.3 } } };
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-slate-950 text-white font-inter">
-      {/* Animated Background */}
+      {/* Background */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-green-950/20">
           <div className="absolute inset-0 bg-[linear-gradient(rgba(34,197,94,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(34,197,94,0.03)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_100%)]"></div>
@@ -160,24 +185,22 @@ const handleSubmit = async (e) => {
         />
       </div>
 
-      {/* Hero Section */}
+      {/* Header */}
       <motion.div
-        className="relative z-10 pt-32 pb-20 text-center "
+        className="relative z-10 pt-32 pb-20 text-center"
         initial={{ y: 60, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8 }}
       >
-        <h1 className="text-5xl  md:text-6xl font-bold leading-tight mb-6 bg-gradient-to-br from-white via-green-100 to-green-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6 bg-gradient-to-br from-white via-green-100 to-green-400 bg-clip-text text-transparent">
           {t("contact_title")}
         </h1>
-        <p className="text-xl md:text-2xl text-slate-400 max-w-4xl mx-auto mb-8 leading-relaxed">
+        <p className="text-base px-6 md:px-2 md:text-2xl text-slate-400 max-w-4xl mx-auto mb-8 leading-relaxed">
           {t("contact_subtitle")}
         </p>
       </motion.div>
 
-      
-
-      {/* Contact Form Section */}
+      {/* Contact Section */}
       <div className="relative py-16 pb-24 z-10">
         <motion.div
           className="max-w-7xl mx-auto px-6"
@@ -188,11 +211,11 @@ const handleSubmit = async (e) => {
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             
-            {/* Contact Information */}
+            {/* Contact Info */}
             <motion.div className="flex flex-col justify-center" variants={fadeInUp}>
               <div className="mb-10">
                 <h3 className="text-2xl font-bold text-white mb-4">{t("lets_conversation")}</h3>
-                <p className="text-slate-400 leading-relaxed text-lg">{t("conversation_desc")}</p>
+                <p className="text-slate-400 leading-relaxed text-base md:text-lg">{t("conversation_desc")}</p>
               </div>
 
               <motion.div className="space-y-6">
@@ -212,224 +235,159 @@ const handleSubmit = async (e) => {
                     </div>
                     <div className="flex-1">
                       <h4 className="text-lg font-semibold text-white mb-1">{info.title}</h4>
-                      <p className="text-slate-300 transition-colors duration-300 font-medium block mb-1">
-                        {info.value}
-                      </p>
+                      <p className="text-slate-300 transition-colors duration-300 font-medium block mb-1">{info.value}</p>
                       <p className="text-slate-500 text-sm">{info.description}</p>
                     </div>
                   </motion.a>
                 ))}
               </motion.div>
-
-              {/* Additional Info Section */}
-              <motion.div className="mt-12 p-6 rounded-xl border border-slate-800 bg-slate-900/50 backdrop-blur-sm" variants={fadeInUp}>
-                <h4 className="text-lg font-semibold text-white mb-3">{t("business_hours_title")}</h4>
-                <div className="space-y-2 text-slate-400">
-                  <div className="flex justify-between">
-                    <span>{t("monday_friday")}</span>
-                    <span className="font-medium">{t("hours_mon_fri")}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>{t("saturday")}</span>
-                    <span className="font-medium">{t("hours_sat")}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>{t("sunday")}</span>
-                    <span className="font-medium text-red-400">{t("hours_sun")}</span>
-                  </div>
-                </div>
-              </motion.div>
             </motion.div>
 
             {/* Contact Form */}
-            <motion.div className="bg-slate-900/50 backdrop-blur-sm shadow-2xl shadow-green-500/5 rounded-2xl p-8 md:p-10 border border-slate-800" variants={fadeInUp}>
-              <h2 className="text-2xl font-bold text-white mb-8">
-                {t("send_us_message")}
-              </h2>
+            <motion.div className="md:bg-slate-900/50 md:backdrop-blur-sm md:shadow-2xl md:shadow-green-500/5 rounded-2xl p-4 md:p-10 md:border md:border-slate-800" variants={fadeInUp}>
+              <h2 className="text-2xl font-bold text-white mb-8">{t("send_us_message")}</h2>
               
               <form onSubmit={handleSubmit} className="space-y-6">
+                {successMessage && (
+                  <div className="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
+                    {successMessage}
+                  </div>
+                )}
+                
+                {/* Name & Email */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="relative">
-                    <label htmlFor="name" className="block text-sm font-medium text-slate-400 mb-2">
-                      {t("full_name")} <span className="text-green-500">*</span>
-                    </label>
+                    <label htmlFor="name" className="block text-sm font-medium text-slate-400 mb-2">{t("full_name")} <span className="text-green-500">*</span></label>
                     <input
                       type="text"
                       id="name"
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      required
-                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                      placeholder={t("enter_full_name")}
+                      className={`w-full px-4 py-3 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 ${errors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-700'}`}
+                      placeholder="Enter full name"
                     />
+                    {errors.name && <p className="mt-2 text-sm text-red-500">{errors.name}</p>}
                   </div>
                   <div className="relative">
-                    <label htmlFor="email" className="block text-sm font-medium text-slate-400 mb-2">
-                      {t("email_address")} <span className="text-green-500">*</span>
-                    </label>
+                    <label htmlFor="email" className="block text-sm font-medium text-slate-400 mb-2">{t("email_address")} <span className="text-green-500">*</span></label>
                     <input
                       type="email"
                       id="email"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      required
-                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                      placeholder={t("enter_email")}
+                      className={`w-full px-4 py-3 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 ${errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-700'}`}
+                      placeholder="Enter email address"
                     />
+                    {errors.email && <p className="mt-2 text-sm text-red-500">{errors.email}</p>}
                   </div>
                 </div>
 
+                {/* Company & Phone */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="relative">
-                    <label htmlFor="company" className="block text-sm font-medium text-slate-400 mb-2">
-                      {t("company")}
-                    </label>
+                    <label htmlFor="company" className="block text-sm font-medium text-slate-400 mb-2">{t("company")}</label>
                     <input
                       type="text"
                       id="company"
                       name="company"
                       value={formData.company}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                      placeholder={t("enter_company")}
+                      className={`w-full px-4 py-3 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 ${errors.company ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-700'}`}
+                      placeholder="Enter company name"
                     />
+                    {errors.company && <p className="mt-2 text-sm text-red-500">{errors.company}</p>}
                   </div>
                   <div className="relative">
-                    <label htmlFor="phone" className="block text-sm font-medium text-slate-400 mb-2">
-                      {t("phone_number")}
-                    </label>
+                    <label htmlFor="phone" className="block text-sm font-medium text-slate-400 mb-2">{t("phone_number")}</label>
                     <input
                       type="tel"
                       id="phone"
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                      placeholder={t("enter_phone_number")}
+                      className={`w-full px-4 py-3 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 ${errors.phone ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-700'}`}
+                      placeholder="Enter phone number"
                     />
+                    {errors.phone && <p className="mt-2 text-sm text-red-500">{errors.phone}</p>}
                   </div>
                 </div>
 
+                {/* Service & Budget */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="relative">
-                    <label htmlFor="service" className="block text-sm font-medium text-slate-400 mb-2">
-                      {t("service_interest")}
-                    </label>
+                    <label htmlFor="service" className="block text-sm font-medium text-slate-400 mb-2">Service Interest</label>
                     <select
                       id="service"
                       name="service"
                       value={formData.service}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                      className={`w-full px-4 py-3 bg-slate-800 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 ${errors.service ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-700'}`}
                     >
                       <option value="">{t("select_service")}</option>
-                      {services.map((service, index) => (
-                        <option key={index} value={service}>{service}</option>
-                      ))}
+                      {services.map((service, index) => <option key={index} value={service}>{service}</option>)}
                     </select>
+                    {errors.service && <p className="mt-2 text-sm text-red-500">{errors.service}</p>}
                   </div>
                   <div className="relative">
-                    <label htmlFor="budget" className="block text-sm font-medium text-slate-400 mb-2">
-                      {t("budget_range")}
-                    </label>
+                    <label htmlFor="budget" className="block text-sm font-medium text-slate-400 mb-2">Budget Range</label>
                     <select
                       id="budget"
                       name="budget"
                       value={formData.budget}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                      className={`w-full px-4 py-3 bg-slate-800 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 ${errors.budget ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-700'}`}
                     >
                       <option value="">{t("select_budget")}</option>
-                      {budgets.map((budget, index) => (
-                        <option key={index} value={budget}>{budget}</option>
-                      ))}
+                      {budgets.map((budget, index) => <option key={index} value={budget}>{budget}</option>)}
                     </select>
+                    {errors.budget && <p className="mt-2 text-sm text-red-500">{errors.budget}</p>}
                   </div>
                 </div>
 
+                {/* Timeline */}
                 <div className="relative">
-                  <label htmlFor="timeline" className="block text-sm font-medium text-slate-400 mb-2">
-                    {t("project_timeline")}
-                  </label>
+                  <label htmlFor="timeline" className="block text-sm font-medium text-slate-400 mb-2">Project Timeline</label>
                   <select
                     id="timeline"
                     name="timeline"
                     value={formData.timeline}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                    className={`w-full px-4 py-3 bg-slate-800 border rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 ${errors.timeline ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-700'}`}
                   >
                     <option value="">{t("select_timeline")}</option>
-                    {timelines.map((timeline, index) => (
-                      <option key={index} value={timeline}>{timeline}</option>
-                    ))}
+                    {timelines.map((timeline, index) => <option key={index} value={timeline}>{timeline}</option>)}
                   </select>
+                  {errors.timeline && <p className="mt-2 text-sm text-red-500">{errors.timeline}</p>}
                 </div>
-                
+
+                {/* Message */}
                 <div className="relative">
-                  <label htmlFor="message" className="block text-sm font-medium text-slate-400 mb-2">
-                    {t("message")} <span className="text-green-500">*</span>
-                  </label>
+                  <label htmlFor="message" className="block text-sm font-medium text-slate-400 mb-2">{t("your_message")} <span className="text-green-500">*</span></label>
                   <textarea
                     id="message"
                     name="message"
+                    rows={4}
                     value={formData.message}
                     onChange={handleInputChange}
-                    required
-                    rows={5}
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 resize-none"
-                    placeholder={t("tell_about_project")}
+                    className={`w-full px-4 py-3 bg-slate-800 border rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-200 ${errors.message ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-slate-700'}`}
+                    placeholder="Type your message here"
                   />
+                  {errors.message && <p className="mt-2 text-sm text-red-500">{errors.message}</p>}
                 </div>
-                
+
+                {/* Submit */}
                 <button
                   type="submit"
+                  className="w-full py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-all duration-200"
                   disabled={isSubmitting}
-                  className={`relative overflow-hidden bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-4 rounded-xl font-semibold shadow-md transition-all duration-300 w-full flex items-center justify-center ${
-                    isSubmitting ? 'opacity-80 cursor-not-allowed' : 'hover:shadow-lg hover:-translate-y-0.5'
-                  }`}
                 >
-                  {isSubmitting ? (
-                    <>
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      {t("sending")}
-                    </>
-                  ) : (
-                    <>
-                      {t("send_message")}
-                      <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    </>
-                  )}
+                  {t("send_message")}
                 </button>
               </form>
             </motion.div>
-          </div>
-        </motion.div>
-      </div>
 
-      {/* Map Section Placeholder */}
-      <div className="relative py-16 z-10">
-        <motion.div
-          className="max-w-6xl mx-auto px-6"
-          variants={fadeInUp}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
-        >
-          <div className="bg-slate-900/50 backdrop-blur-sm rounded-2xl shadow-2xl shadow-green-500/5 p-8 h-96 flex items-center justify-center border border-slate-800">
-            <div className="text-center">
-              <div className="text-4xl mb-4">🗺️</div>
-              <p className="text-slate-400 font-medium">{t("interactive_map")}</p>
-              <button className="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200">
-                {t("open_maps")}
-              </button>
-            </div>
           </div>
         </motion.div>
       </div>

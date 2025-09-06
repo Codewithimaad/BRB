@@ -163,7 +163,7 @@ export default function Services() {
                             <img
                               src={service.image}
                               alt={i18n.language === 'ar' ? service.titleAr : service.title}
-                              className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105 group-hover:brightness-110"
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-hover:brightness-110"
                             />
                             <div className="absolute top-2 left-2 w-3 h-3 border-l-2 border-t-2 border-green-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                             <div className="absolute bottom-2 right-2 w-3 h-3 border-r-2 border-b-2 border-green-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>

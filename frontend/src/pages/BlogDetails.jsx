@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 export default function BlogDetails() {
   const { id } = useParams();
@@ -9,6 +10,7 @@ export default function BlogDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const loadBlog = async () => {
@@ -16,32 +18,35 @@ export default function BlogDetails() {
         setLoading(true);
         setError(null);
         const base = import.meta.env.VITE_BACKEND_URL || window.location.origin;
+        // You might need to send the language preference to the backend if your API
+        // is designed to return language-specific data.
         const res = await axios.get(`${base}/api/blogs/${id}`);
         if (res.data.success) {
           setBlog(res.data.blog);
         } else {
-          setError("Failed to fetch blog");
+          setError(t("failed_to_fetch_blog"));
         }
       } catch (e) {
         console.error('Error fetching blog:', e);
-        setError(e.response?.data?.message || "Failed to fetch blog");
+        setError(e.response?.data?.message || t("failed_to_fetch_blog"));
       } finally {
         setLoading(false);
         setTimeout(() => setIsLoaded(true), 100);
       }
     };
     loadBlog();
-  }, [id]);
+  }, [id, t]); // Add 't' as a dependency
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(window.location.href);
     // Add a toast notification here
+    alert(t("link_copied_to_clipboard"));
   };
 
   const shareOnSocialMedia = (platform) => {
     if (!blog) return;
     const url = encodeURIComponent(window.location.href);
-    const title = encodeURIComponent(blog.title);
+    const title = encodeURIComponent(i18n.language === 'ar' && blog.titleAr ? blog.titleAr : blog.title);
     
     let shareUrl = "";
     switch(platform) {
@@ -60,6 +65,8 @@ export default function BlogDetails() {
     
     window.open(shareUrl, "_blank", "width=600,height=400");
   };
+
+  const isArabic = i18n.language === 'ar';
 
   if (loading) {
     return (
@@ -102,7 +109,7 @@ export default function BlogDetails() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h2 className="text-xl font-semibold text-white mb-2">Something went wrong</h2>
+          <h2 className="text-xl font-semibold text-white mb-2">{t("something_went_wrong")}</h2>
           <p className="text-red-400 mb-6">{error}</p>
           <button
             onClick={() => navigate(-1)}
@@ -111,7 +118,7 @@ export default function BlogDetails() {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Back to blogs
+            {t("back_to_blogs")}
           </button>
         </div>
       </div>
@@ -124,9 +131,9 @@ export default function BlogDetails() {
     ? [blog.category]
     : [];
 
-  const mainTitle = blog?.title;
-  const mainContent = blog?.content;
-  const excerpt = blog?.excerpt;
+  const mainTitle = isArabic && blog?.titleAr ? blog.titleAr : blog?.title;
+  const mainContent = isArabic && blog?.contentAr ? blog.contentAr : blog?.content;
+  const excerpt = isArabic && blog?.excerptAr ? blog.excerptAr : blog?.excerpt;
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-slate-950 text-white font-sans">
@@ -141,7 +148,7 @@ export default function BlogDetails() {
       </div>
 
       {/* Hero Section */}
-      <div className={`relative z-10 w-full min-h-[60vh] flex flex-col items-center justify-center text-center px-4 transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+      <div className={`relative z-10 w-full min-h-[60vh] flex flex-col items-center justify-center text-center px-4 transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} style={{ direction: isArabic ? 'rtl' : 'ltr' }}>
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-20 transition-all duration-1000"></div>
         {blog?.imageUrl && (
           <img 
@@ -155,21 +162,21 @@ export default function BlogDetails() {
             {mainTitle}
           </h1>
           <p className="text-xl md:text-2xl text-slate-300 font-light mb-8 max-w-3xl mx-auto">
-            {excerpt || "An insightful look into the latest trends and technologies in the digital world."}
+            {excerpt || t("default_excerpt_text")}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-6 text-slate-400">
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
-              <span className="font-semibold">Administrator</span>
+              <span className="font-semibold">{t("administrator_author")}</span>
             </div>
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               <span>
-                {new Date(blog?.publishedAt || blog?.createdAt || Date.now()).toLocaleDateString('en-US', {
+                {new Date(blog?.publishedAt || blog?.createdAt || Date.now()).toLocaleDateString(isArabic ? 'ar-EG' : 'en-US', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric'
@@ -193,9 +200,9 @@ export default function BlogDetails() {
       </div>
       
       {/* Main Content Container */}
-      <div className={`relative z-20 -mt-24 mb-16 px-4 md:px-8 max-w-5xl mx-auto transform transition-all duration-1000 ease-out ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'}`} style={{ transitionDelay: '0.2s' }}>
+      <div className={`relative z-20 -mt-24 mb-16 px-4 md:px-8 max-w-5xl mx-auto transform transition-all duration-1000 ease-out ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'}`} style={{ transitionDelay: '0.2s', direction: isArabic ? 'rtl' : 'ltr' }}>
         <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800/50 rounded-3xl p-6 md:p-12 shadow-2xl">
-          <div className="prose prose-lg sm:prose-xl max-w-none text-slate-300 leading-relaxed space-y-8">
+          <div className="prose prose-lg sm:prose-xl max-w-none text-slate-300 leading-relaxed space-y-8" style={{ textAlign: isArabic ? 'right' : 'left' }}>
             <div dangerouslySetInnerHTML={{ __html: mainContent }} />
           </div>
 
@@ -208,7 +215,7 @@ export default function BlogDetails() {
               <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
               </svg>
-              Share this article
+              {t("share_this_article")}
             </h3>
             <div className="flex flex-wrap gap-3">
               <button 
@@ -216,21 +223,21 @@ export default function BlogDetails() {
                 className="flex items-center gap-2 px-5 py-2.5 bg-green-500/10 text-white border border-green-500/20 rounded-full transition-all duration-200 text-sm font-medium hover:bg-green-500/20"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
-                Twitter
+                {t("twitter")}
               </button>
               <button 
                 onClick={() => shareOnSocialMedia("facebook")}
                 className="flex items-center gap-2 px-5 py-2.5 bg-green-500/10 text-white border border-green-500/20 rounded-full transition-all duration-200 text-sm font-medium hover:bg-green-500/20"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                Facebook
+                {t("facebook")}
               </button>
               <button 
                 onClick={() => shareOnSocialMedia("linkedin")}
                 className="flex items-center gap-2 px-5 py-2.5 bg-green-500/10 text-white border border-green-500/20 rounded-full transition-all duration-200 text-sm font-medium hover:bg-green-500/20"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.850 3.370-1.850 3.601 0 4.267 2.370 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                LinkedIn
+                 {t("linkedin")}
               </button>
               <button 
                 onClick={copyToClipboard}
@@ -239,14 +246,14 @@ export default function BlogDetails() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
                 </svg>
-                Copy Link
+                {t("copy_link")}
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className={`relative z-10 max-w-5xl mx-auto px-6 lg:px-8 py-12 transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.4s' }}>
+      <div className={`relative z-10 max-w-5xl mx-auto px-6 lg:px-8 py-12 transition-all duration-1000 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.4s', direction: isArabic ? 'rtl' : 'ltr' }}>
         <button
           onClick={() => navigate(-1)}
           className="inline-flex items-center gap-2 text-green-500 font-medium hover:text-green-300 transition-colors duration-200 group mt-8"
@@ -254,7 +261,7 @@ export default function BlogDetails() {
           <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back to blogs
+          {t("back_to_blogs")}
         </button>
       </div>
     </div>

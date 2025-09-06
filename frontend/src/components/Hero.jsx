@@ -93,7 +93,7 @@ export default function Hero() {
               href="/contact"
               className="px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
             >
-              {t("get_started")}
+              {t("get_consultation")}
             </a>
             <a
               href="/services"

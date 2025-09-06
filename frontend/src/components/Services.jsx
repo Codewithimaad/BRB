@@ -53,15 +53,16 @@ export default function Services() {
       <div className={`relative z-10 pt-24 pb-16 text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full mb-8 backdrop-blur-sm">
           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          <span className="text-sm font-medium text-green-300">Premium Services</span>
+          <span className="text-sm font-medium text-green-300"> {t("premium_services")}</span>
         </div>
         
         <h1 className="text-4xl md:text-8xl font-black mb-6 bg-gradient-to-br from-white via-green-100 to-green-400 bg-clip-text text-transparent leading-tight">
-          Our Services
+          {t("our_services")}
         </h1>
         
         <p className="text-base md:text-lg text-slate-400 max-w-2xl mx-auto mb-8 leading-relaxed">
-          Discover our cutting-edge solutions designed to transform your business experience
+
+          {t("services_desc")}
         </p>
         
         <div className="flex justify-center">
@@ -188,7 +189,7 @@ export default function Services() {
             
             {/* Sub-text */}
             <p className="mt-4 text-slate-400 text-sm">
-              Explore all our premium solutions
+               {t("sub_text_services")}
             </p>
           </div>
         </div>

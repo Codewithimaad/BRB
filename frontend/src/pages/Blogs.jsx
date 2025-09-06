@@ -99,7 +99,7 @@ export default function Blogs() {
             </div>
             
             <h1 className="text-4xl md:text-8xl font-black mb-6 bg-gradient-to-br from-white via-green-100 to-green-400 bg-clip-text text-transparent leading-tight">
-              Our <span className="bg-gradient-to-br from-green-400 to-green-500 bg-clip-text text-transparent">Insights</span>
+              <span className="bg-gradient-to-br from-green-400 to-green-500 bg-clip-text text-transparent">{t("latest_insights")}</span>
             </h1>
             
             <p className="text-base md:text-lg text-slate-400 max-w-2xl px-6 md:px-0 mx-auto mb-8 leading-relaxed">
